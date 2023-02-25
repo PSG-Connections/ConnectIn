@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { Button,TextInput, View,TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { Button,TextInput, View,TouchableWithoutFeedback, Keyboard,Image, StyleSheet, Text} from 'react-native';
 import { Formik } from 'formik';
 
 function Login():JSX.Element {
   return (
-    <View>
+    <View style={styles.root}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Image style={styles.logo} source={require('../assets/loginScreen.png')} />
+      </TouchableWithoutFeedback>
       <Formik
         initialValues={{email:'',password:''}}
         onSubmit={(values)=>{
@@ -22,16 +24,22 @@ function Login():JSX.Element {
           </View>
         )}
       </Formik>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Text>New to ....?</Text>
       </TouchableWithoutFeedback>
     </View>
   );
 }
 
-// const styles = StyleSheet.create({
-//   logo:{
-//     height:250,
-//     width:350,
-//   }
-// })
+const styles = StyleSheet.create({
+  root:{
+    // justifyContent:'center',
+    alignItems:'center',
+  },
+  logo:{
+    height:250,
+    width:350,
+  },
+})
 
 export default Login;
