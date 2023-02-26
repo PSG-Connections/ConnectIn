@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */ /* eslint-disable prettier/prettier */
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {

@@ -4,9 +4,9 @@ import { View,Text} from 'react-native';
 
 function Register():JSX.Element {
   return (
-    <View className=" flex items-center justify-center  bg-white h-full w-full" >
-        <Text>Register Here !!</Text>
-</View>
+    <View>
+        <Text className="text-black">Register Here !!.........................</Text>
+  </View>
 
   );
 }
