@@ -1,11 +1,6 @@
 import React from 'react';
-import {View} from 'react-native';
-import Login from './src/screens/login';
+import MainNavigation from './src/navigations/index';
 
 export default function App(): JSX.Element {
-  return (
-    <View>
-      <Login />
-    </View>
-  );
+  return <MainNavigation />;
 }

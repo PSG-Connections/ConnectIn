@@ -2,8 +2,9 @@
 import React from 'react';
 import { TextInput, View,TouchableWithoutFeedback, TouchableOpacity, Keyboard,Image,Text} from 'react-native';
 import { Formik } from 'formik';
-
-function Login():JSX.Element {
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+type NavProps = NativeStackScreenProps<any>;
+function Login({navigation}:NavProps):JSX.Element {
   return (
     <View className=" flex items-center justify-center  bg-white h-full w-full" >
 
@@ -42,7 +43,9 @@ function Login():JSX.Element {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="flex flex-row gap-2">
           <Text  className="font-bold text-black pt-4">New to ....?</Text>
+          <TouchableOpacity onPress={()=>navigation.navigate('Register')}>
           <Text  className="font-bold text-[#1079D9] pt-4">Join Us</Text>
+          </TouchableOpacity>
         </View>
         </TouchableWithoutFeedback>
     </View>
