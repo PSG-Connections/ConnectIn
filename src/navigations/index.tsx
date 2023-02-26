@@ -2,18 +2,31 @@ import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Login from '../screens/login';
-import Register from '../screens/register';
+import AuthNavigation from './login';
+import HomeNavigation from './home';
 
-const Stack = createNativeStackNavigator();
+const mainStack = createNativeStackNavigator();
 
 export default function MainNavigation() {
+  let isSignedIn = true;
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-      </Stack.Navigator>
+      <mainStack.Navigator>
+        {/* check authentication -- need to change to global state management */}
+        {isSignedIn ? (
+          <mainStack.Screen
+            name="HomeNavigationStack"
+            component={HomeNavigation}
+            options={{headerShown: false}}
+          />
+        ) : (
+          <mainStack.Screen
+            name="AuthNavigationStack"
+            component={AuthNavigation}
+            options={{headerShown: false}}
+          />
+        )}
+      </mainStack.Navigator>
     </NavigationContainer>
   );
 }
