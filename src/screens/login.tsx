@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -16,9 +17,7 @@ import {Formik} from 'formik';
 import {validEmail} from '../constants/regex';
 type NavProps = NativeStackScreenProps<any>;
 function Login({navigation}:NavProps):JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [emailErr, setEmailErr] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pwdError, setPwdError] = useState(false);
 
   const validate = (email: any) => {
