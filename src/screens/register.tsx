@@ -1,12 +1,12 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
-import { View,Text} from 'react-native';
+import { Text } from 'react-native';
+import { StyledSafeAreaView, StyledView } from '../styles/index';
 
-function Register():JSX.Element {
+function Register (): JSX.Element {
   return (
-    <View>
+    <StyledSafeAreaView className={'h-screen bg-red-200'}>
         <Text className="text-black">Register Here !!.........................</Text>
-  </View>
+  </StyledSafeAreaView>
 
   );
 }
