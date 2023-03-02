@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ /* eslint-disable prettier/prettier */
+// /* eslint-disable @typescript-eslint/no-unused-vars */ /* eslint-disable prettier/prettier */
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
@@ -8,16 +8,23 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
-import React, {useState} from 'react';
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, { useContext, useState } from 'react';
 
-import {Formik} from 'formik';
-import {validEmail} from '../constants/regex';
+import { Formik } from 'formik';
+import { validEmail } from '../constants/regex';
+import { AuthContext } from '../contexts/authContext';
+import { LoginAPI } from '../apis/login';
+import { setEncryptedItemByKey } from '../helpers/utils';
+
 type NavProps = NativeStackScreenProps<any>;
-function Login({navigation}:NavProps):JSX.Element {
-  const [emailErr, setEmailErr] = useState(false);
-  const [pwdError, setPwdError] = useState(false);
+export default function Login ({ navigation }: NavProps): JSX.Element {
+  const authContext = useContext(AuthContext);
+
+  const [, setEmailErr] = useState(false);
+  // const [pwdError, setPwdError] = useState(false);
 
   const validate = (email: any) => {
     if (validEmail.test(email)) {
@@ -28,7 +35,15 @@ function Login({navigation}:NavProps):JSX.Element {
       console.log('Invalid Email');
     }
   };
+  const storeSession = async (data: object) => {
+    try {
+      await setEncryptedItemByKey('user_session', data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
+    // <KeyboardAwareScrollView className='flex h-screen'>
     <View className=" flex items-center justify-center  bg-white h-full w-full">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Image
@@ -46,12 +61,18 @@ function Login({navigation}:NavProps):JSX.Element {
         </View>
 
         <Formik
-          initialValues={{email: '', password: ''}}
-          onSubmit={values => {
+          initialValues={{ email: '', password: '' }}
+          onSubmit={async (values) => {
             console.log('email ->', values.email);
             console.log('password ->', values.password);
+            const response = await LoginAPI(values);
+            console.log('response in login screen ===>', response);
+            const accessToken = response?.data?.token?.access_token;
+            const storeData = { accessToken };
+            await storeSession(storeData);
+            authContext.dispatch({ type: 'SIGNED_IN', accessToken });
           }}>
-          {({handleChange, handleSubmit, values}) => (
+          {({ handleChange, handleSubmit, values }) => (
             <View className="w-[80%] flex flex-col gap-5 items-center justify-center">
               <TextInput
                 className="bg-gray-300 w-full rounded-full pl-4"
@@ -87,14 +108,13 @@ function Login({navigation}:NavProps):JSX.Element {
       </View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="flex flex-row gap-2">
-          <Text  className="font-bold text-black pt-4">New to ....?</Text>
-          <TouchableOpacity onPress={()=>navigation.navigate('Register')}>
-          <Text  className="font-bold text-[#1079D9] pt-4">Join Us</Text>
+          <Text className="font-bold text-black pt-4">New to ....?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text className="font-bold text-[#1079D9] pt-4">Join Us</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </View>
+    // </KeyboardAwareScrollView>
   );
 }
-
-export default Login;

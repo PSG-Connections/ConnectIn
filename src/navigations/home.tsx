@@ -1,4 +1,4 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
 import FeedNavigation from './feed';
@@ -9,9 +9,13 @@ import Profile from '../screens/profile';
 
 const homeNavigation = createBottomTabNavigator();
 
-export default function HomeNavigation(): JSX.Element {
+export default function HomeNavigation (): JSX.Element {
   return (
-    <homeNavigation.Navigator screenOptions={{headerShown: false}}>
+    <homeNavigation.Navigator screenOptions={
+      {
+        headerShown: false
+        // tabBarShowLabel: false
+      }}>
       <homeNavigation.Screen name="Feed" component={FeedNavigation} />
       <homeNavigation.Screen name="Search" component={SearchNavigation} />
       <homeNavigation.Screen name="Post" component={PostNavigation} />
