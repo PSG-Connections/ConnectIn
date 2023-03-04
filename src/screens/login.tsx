@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ /* eslint-disable prettier/prettier */
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Image,
   Keyboard,
@@ -13,7 +12,9 @@ import {
 import React, {useState} from 'react';
 
 import {Formik} from 'formik';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {validEmail} from '../constants/regex';
+
 type NavProps = NativeStackScreenProps<any>;
 function Login({navigation}:NavProps):JSX.Element {
   const [emailErr, setEmailErr] = useState(false);
