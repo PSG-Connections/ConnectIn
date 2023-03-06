@@ -19,7 +19,9 @@ export default function Profile (): JSX.Element {
     <View className="h-screen bg-amber-100 items-center justify-center">
         <Text className="text-black">Profile here ...............</Text>
         <TouchableOpacity onPress={() => {
-          void Promise.resolve(handleOnPressLogOut());
+          void (async () => {
+            await handleOnPressLogOut();
+          })();
         }}>
           <Text className="font-bold text-[#1079D9] pt-4">Log Out</Text>
           </TouchableOpacity>
