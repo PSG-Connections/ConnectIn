@@ -1,5 +1,7 @@
 export const splanScreenMinTime: any = 1500; // 2 seconds
 
+export const serverURL: string = '';
+
 export const testLoginResponse: object = {
   data: {
     token: {
