@@ -1,6 +1,5 @@
 // /* eslint-disable @typescript-eslint/no-unused-vars */ /* eslint-disable prettier/prettier */
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Image,
   Keyboard,
@@ -18,6 +17,8 @@ import { validEmail } from '../constants/regex';
 import { AuthContext } from '../contexts/authContext';
 import { LoginAPI } from '../apis/login';
 import { setEncryptedItemByKey } from '../helpers/utils';
+
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function Login ({ navigation }: NavProps): JSX.Element {
