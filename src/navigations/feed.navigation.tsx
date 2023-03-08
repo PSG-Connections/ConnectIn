@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import Feed from '../screens/feed';
+import Feed from '../screens/feed.screen';
 const feedNavigation = createNativeStackNavigator();
 
 export default function FeedNavigation (): JSX.Element {

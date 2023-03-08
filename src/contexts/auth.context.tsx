@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 import React, { createContext, useReducer, useEffect } from 'react';
 import { getEncryptedItemByKey, sleepByMilliSec } from '../helpers/utils';
-import { splanScreenMinTime } from '../constants/common';
+import { splanScreenMinTime } from '../constants/common.constant';
+import { getNewToken } from '../apis';
 
 export const AuthContext = createContext<any | null>(null);
 
@@ -41,6 +42,18 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
     }
   );
 
+  const SignOut = async(startTime: any) => {
+    const timeTowait = splanScreenMinTime - (Date.now() - startTime);
+    if (timeTowait > 0) await sleepByMilliSec(timeTowait);
+    dispatch({ type: 'SIGNED_OUT' });
+  };
+
+  const SignIn = async(startTime: any, accessToken: any) => {
+    const timeTowait = splanScreenMinTime - (Date.now() - startTime);
+    if (timeTowait > 0) await sleepByMilliSec(timeTowait);
+    dispatch({ type: 'SIGNED_IN', accessToken });
+  };
+
   useEffect(() => {
     const bootstrapAsync = async () => {
       let session;
@@ -48,19 +61,19 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
       try {
         session = await getEncryptedItemByKey('user_session');
         console.log('session get', session);
-        const timeTowait = splanScreenMinTime - (Date.now() - startTime);
-        await sleepByMilliSec(timeTowait);
         if (session !== null) {
-          // api call to get new access token with refresh token
-          dispatch({ type: 'SIGNED_IN', accessToken: session.accessToken });
+          const accessToken = await getNewToken();
+          if (accessToken) {
+            await SignIn(startTime, accessToken);
+          } else {
+            await SignOut(startTime);
+          }
         } else {
-          dispatch({ type: 'SIGNED_OUT' });
+          await SignOut(startTime);
         }
       } catch (error) {
         console.log('session get error ', error);
-        const timeTowait = splanScreenMinTime - (Date.now() - startTime);
-        await sleepByMilliSec(timeTowait);
-        dispatch({ type: 'SIGNED_OUT' });
+        await SignOut(startTime);
       }
     };
 

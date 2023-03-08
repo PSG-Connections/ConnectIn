@@ -1,25 +1,18 @@
-/* eslint-disable prettier/prettier */
-
 import {
-  Image,
-  ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
-import {Formik} from 'formik';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { Formik } from 'formik';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import {StyledSafeAreaView} from '../styles/index';
+import { StyledSafeAreaView } from '../styles/index';
+import { RegisterUserAPI } from '../apis/register.api';
 
-//         <Text className="font-bold text-black pt-4">Already signed up ?</Text>
-//         <TouchableOpacity onPress={() => navigation.popToTop()}>
-//         <Text className="font-bold text-[#1079D9] pt-4">Sign In</Text>
 type NavProps = NativeStackScreenProps<any>;
-function Register({navigation}: NavProps): JSX.Element {
+function Register ({ navigation }: NavProps): JSX.Element {
   const [pwdVisible, setPwdVisible] = React.useState(true);
 
   return (
@@ -30,37 +23,43 @@ function Register({navigation}: NavProps): JSX.Element {
           <View className="shadow-2xl  shadow-black rounded-2xl bg-gray-100 w-[85%]  h-[70%] flex  items-center justify-center">
             <Formik
               initialValues={{
-                firstName: '',
-                lastName: '',
+                first_name: '',
+                last_name: '',
                 phone: '',
                 email: '',
                 password: '',
-                confirmPassword: '',
+                confirm_password: ''
               }}
-              onSubmit={values => {
+              onSubmit={async (values) => {
                 console.log('email -> ', values.email);
+                const response = await RegisterUserAPI(values);
+                if (response.error !== '') {
+                  // set state
+                } else {
+                  // if response is as expected move to otp screen
+                }
               }}>
-              {({handleChange, handleSubmit, values}) => (
+              {({ handleChange, handleSubmit, values }) => (
                 <View className="h-[80%] w-[80%] flex flex-col gap-5 items-center ">
                   <TextInput
-                    className="bg-[#ECEBEB] font-bold	 w-full rounded-full pl-4"
+                    className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4"
                     placeholder="First Name"
                     keyboardType="default"
                     onChangeText={handleChange('firstName')}
-                    value={values.firstName}
+                    value={values.first_name}
                     placeholderTextColor={'black'}
                   />
                   <TextInput
-                    className="bg-[#ECEBEB] font-bold	 w-full rounded-full pl-4"
+                    className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4"
                     placeholder="Last Name"
                     keyboardType="default"
                     onChangeText={handleChange('lastName')}
-                    value={values.lastName}
+                    value={values.last_name}
                     placeholderTextColor={'black'}
                     onFocus={e => e.preventDefault()}
                   />
                   <TextInput
-                    className="bg-[#ECEBEB] font-bold	 w-full rounded-full pl-4"
+                    className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4"
                     placeholder="Phone"
                     keyboardType="default"
                     onChangeText={handleChange('phone')}
@@ -68,7 +67,7 @@ function Register({navigation}: NavProps): JSX.Element {
                     placeholderTextColor={'black'}
                   />
                   <TextInput
-                    className="bg-[#ECEBEB] font-bold	 w-full rounded-full pl-4"
+                    className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4"
                     placeholder="Email"
                     keyboardType="default"
                     onChangeText={handleChange('email')}
@@ -76,7 +75,7 @@ function Register({navigation}: NavProps): JSX.Element {
                     placeholderTextColor={'black'}
                   />
                   <TextInput
-                    className="bg-[#ECEBEB] font-bold	 w-full rounded-full pl-4"
+                    className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4"
                     placeholder="Password"
                     secureTextEntry={pwdVisible}
                     onChangeText={handleChange('password')}
@@ -89,11 +88,11 @@ function Register({navigation}: NavProps): JSX.Element {
                 />
               </View> */}
                   <TextInput
-                    className="bg-[#ECEBEB] font-bold	 w-full rounded-full pl-4"
+                    className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4"
                     placeholder="Confirm Password"
                     secureTextEntry={true}
                     onChangeText={handleChange('confirmPassword')}
-                    value={values.confirmPassword}
+                    value={values.confirm_password}
                     placeholderTextColor={'black'}
                   />
                   <TouchableOpacity

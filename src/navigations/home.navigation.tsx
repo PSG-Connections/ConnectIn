@@ -6,11 +6,11 @@ import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FeedNavigation from './feed';
-import SearchNavigation from './search';
-import PostNavigation from './post';
-import NotificationNavigation from './notifications';
-import Profile from '../screens/profile';
+import FeedNavigation from './feed.navigation';
+import SearchNavigation from './search.navigation';
+import PostNavigation from './post.navigation';
+import NotificationNavigation from './notifications.navigation';
+import Profile from '../screens/profile.screen';
 
 const homeNavigation = createBottomTabNavigator();
 

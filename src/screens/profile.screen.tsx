@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { AuthContext } from '../contexts/authContext';
+import { AuthContext } from '../contexts/auth.context';
 import { clearEncryptedItemByKey } from '../helpers/utils';
 
 export default function Profile (): JSX.Element {

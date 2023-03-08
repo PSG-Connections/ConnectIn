@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import Profile from '../screens/profile';
+import Profile from '../screens/profile.screen';
 const profileNavigation = createNativeStackNavigator();
 
 export default function ProfileNavigation (): JSX.Element {

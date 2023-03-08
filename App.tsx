@@ -1,6 +1,6 @@
 import React from 'react';
 import MainNavigation from './src/navigations/index';
-import AuthContextProvider from './src/contexts/authContext';
+import AuthContextProvider from './src/contexts/auth.context';
 
 export default function App (): JSX.Element {
   return (

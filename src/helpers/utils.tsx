@@ -9,7 +9,7 @@ export async function getEncryptedItemByKey (key: string) {
       return data;
     }
   } catch (error) {
-    return error;
+    return null;
   }
 }
 

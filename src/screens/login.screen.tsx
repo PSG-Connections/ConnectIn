@@ -14,8 +14,8 @@ import React, { useContext, useState } from 'react';
 
 import { Formik } from 'formik';
 import { validEmail } from '../constants/regex';
-import { AuthContext } from '../contexts/authContext';
-import { LoginAPI } from '../apis/login';
+import { AuthContext } from '../contexts/auth.context';
+import { LoginAPI } from '../apis/login.api';
 import { setEncryptedItemByKey } from '../helpers/utils';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
