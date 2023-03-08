@@ -66,6 +66,10 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
             console.log('email ->', values.email);
             console.log('password ->', values.password);
             const response = await LoginAPI(values);
+            if (response.error !== '') {
+              authContext.dispatch({ type: 'SIGNED_OUT' });
+              return;
+            }
             console.log('response in login screen ===>', response);
             const accessToken = response?.data?.token?.access_token;
             const refreshToken = response?.data?.token?.refresh_token;

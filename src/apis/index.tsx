@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getEncryptedItemByKey } from '../helpers/utils';
 import { serverURL } from '../constants/common';
 
-export const apiRequest = async (config: any) => {
+export const HttpRequest = async (config: any) => {
   const defaultConfig = {
     baseURL: serverURL,
     headers: {

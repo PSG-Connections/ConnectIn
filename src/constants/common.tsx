@@ -1,6 +1,6 @@
 export const splanScreenMinTime: any = 1500; // 2 seconds
 
-export const serverURL: string = '';
+export const serverURL: string = 'https://5e31-2409-4072-e8a-5d9e-b90b-2a5f-96c7-30e7.in.ngrok.io';
 
 export const testLoginResponse: object = {
   data: {
