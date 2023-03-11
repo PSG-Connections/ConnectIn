@@ -15,12 +15,17 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyledSafeAreaView} from '../styles/index';
 
+// import {Toast} from 'toastify-react-native';
+
+const Joi = require('@hapi/joi');
+
 //         <Text className="font-bold text-black pt-4">Already signed up ?</Text>
 //         <TouchableOpacity onPress={() => navigation.popToTop()}>
 //         <Text className="font-bold text-[#1079D9] pt-4">Sign In</Text>
 type NavProps = NativeStackScreenProps<any>;
 function Register({navigation}: NavProps): JSX.Element {
   const [pwdVisible, setPwdVisible] = React.useState(true);
+  const {authSchema}: any = require('../helpers/validation.schema');
 
   return (
     <>
@@ -37,8 +42,41 @@ function Register({navigation}: NavProps): JSX.Element {
                 password: '',
                 confirmPassword: '',
               }}
-              onSubmit={values => {
+              onSubmit={(values: any) => {
+                const schema = Joi.object().keys({
+                  email: Joi.string().alphanum().min(3).max(30).required(),
+                  password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+                });
+                Joi.validate(
+                  {email: 'abc', birthyear: 1994},
+                  schema,
+                  function (err: any, value: any) {},
+                ); // err === null -> valid
+
                 console.log('email -> ', values.email);
+                // Toast.success('Email -> ', values.email);
+                //TODO: need to debug validate
+                // Joi.validate(
+                //   {email: values.email, password: values.password},
+                //   authSchema,
+                //   {abortEarly: false},
+                //   (err: any, data: any) => {
+                //     if (err) {
+                //       console.log(err);
+                //     }
+                //   },
+                // );
+                // try {
+                //   const value = await authSchema.validate(
+                //     {
+                //       email: values.email,
+                //       password: values.password,
+                //     },
+                //     {abortEarly: false},
+                //   );
+                // } catch (err) {
+                //   console.log(err);
+                // }
               }}>
               {({handleChange, handleSubmit, values}) => (
                 <View className="h-[80%] w-[80%] flex flex-col gap-5 items-center ">
