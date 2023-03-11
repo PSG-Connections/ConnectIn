@@ -15,26 +15,25 @@ export const HttpRequest = async (config: any) => {
 
   const response = await axios.request(mergedConfig)
     .then((response) => {
-      console.log('correct response --> ', response);
-      return response.data;
+      return response?.data;
     })
     .catch(async (error) => {
-      console.log('error in request -->', error.response.data);
       if (error.status === 401) {
-        const newToken: string = await getNewToken();
+        const tokenResponse: any = await getNewToken();
+        const newToken: string = tokenResponse?.authorization_details?.access_token;
         if (newToken) {
           mergedConfig.headers.Authorization = `Bearer ${newToken}`;
           const retryResponse = await axios.request(mergedConfig)
             .then((response) => {
-              return response.data;
+              return response?.data;
             })
             .catch((error) => {
-              return error.response.data;
+              return error?.response?.data;
             });
-          return retryResponse;
+          return retryResponse?.data;
         }
       } else {
-        return error.response.data;
+        return error?.response?.data;
       }
     });
   return response;
@@ -45,18 +44,20 @@ export const getNewToken = async () => {
   if (session === null) {
     return null;
   }
-  const rToken: String = session.refreshToken;
-  const response = await axios.get(`${serverURL}/auth/token`, {
+  const rToken: string = session.refreshToken;
+  const response = await axios.get(`${serverURL}/api/auth/token`, {
     params: {
-      refresh_token: rToken
+      refresh_token: 'Bearer '.concat(rToken)
     }
   }).then((response) => {
     let accessToken;
     if (response.status === 200) {
-      accessToken = response?.data?.token?.access_token;
+      accessToken = response?.data;
     }
     return accessToken;
-  }).catch(() => {
+  }).catch((error) => {
+    console.log(error?.response?.data);
+
     return null;
   });
   return response;

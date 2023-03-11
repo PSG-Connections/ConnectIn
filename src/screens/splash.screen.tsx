@@ -13,8 +13,8 @@ function Splash (): JSX.Element {
 
 const styles = StyleSheet.create({
   logo: {
-    width: '50%',
-    height: '20%'
+    width: '60%',
+    height: '30%'
   }
 });
 

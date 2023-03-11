@@ -15,7 +15,7 @@ import React, { useContext, useState } from 'react';
 import { Formik } from 'formik';
 import { validEmail } from '../constants/regex';
 import { AuthContext } from '../contexts/auth.context';
-import { LoginAPI } from '../apis/login.api';
+import { LoginAPI } from '../apis/auth.api';
 import { setEncryptedItemByKey } from '../helpers/utils';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -43,6 +43,9 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
       console.log(error);
     }
   };
+  const handleForgotPassword = () => {
+    navigation.navigate('ForgotPasswordEmail');
+  };
   return (
     // <KeyboardAwareScrollView className='flex h-screen'>
     <View className=" flex items-center justify-center  bg-white h-full w-full">
@@ -64,16 +67,10 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={async (values) => {
-            console.log('email ->', values.email);
-            console.log('password ->', values.password);
             const response = await LoginAPI(values);
-            if (response.error !== '') {
-              authContext.dispatch({ type: 'SIGNED_OUT' });
-              return;
-            }
             console.log('response in login screen ===>', response);
-            const accessToken = response?.data?.token?.access_token;
-            const refreshToken = response?.data?.token?.refresh_token;
+            const accessToken = response?.token?.access_token;
+            const refreshToken = response?.token?.refresh_token;
             const storeData = { accessToken, refreshToken };
             await storeSession(storeData);
             authContext.dispatch({ type: 'SIGNED_IN', accessToken });
@@ -95,9 +92,13 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
                 onChangeText={handleChange('password')}
                 value={values.password}
               />
+              <TouchableOpacity onPress={() => {
+                handleForgotPassword();
+              }}>
               <Text className="font-bold text-[#1079D9] pl-4">
                 Forgot Password?
               </Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   validate(values.email);

@@ -62,7 +62,8 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
         session = await getEncryptedItemByKey('user_session');
         console.log('session get', session);
         if (session !== null) {
-          const accessToken = await getNewToken();
+          const tokenResponse = await getNewToken();
+          const accessToken = tokenResponse?.authorization_details?.access_token;
           if (accessToken) {
             await SignIn(startTime, accessToken);
           } else {
