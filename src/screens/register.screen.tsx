@@ -19,13 +19,17 @@ export default function Register ({ navigation }: NavProps): JSX.Element {
 
   const handleOnSubmit = async (values: any) => {
     const response = await RegisterUserAPI(values);
+    console.log('response -->', response);
     if (response?.error) {
       console.log('error -->', response);
       // set state
     } else {
       console.log('sending otp');
-
-      const response = await SendOTPAPI(values);
+      const reqBody = {
+        email: values.email,
+        type: OTP.TYPE_VERIFY_ACCOUNT
+      };
+      const response = await SendOTPAPI(reqBody);
       if (response?.error) {
         console.log('error -->', response);
         // handle errors
@@ -33,8 +37,8 @@ export default function Register ({ navigation }: NavProps): JSX.Element {
         console.log('otp sent');
 
         navigation.navigate('Otp', {
-          type: OTP.TYPE_OTP,
-          description: OTP.DESCRIPTION_OTP,
+          type: OTP.TYPE_VERIFY_ACCOUNT,
+          description: OTP.DESCRIPTION_VERIFY_ACCOUNT,
           userData: {
             email: values.email
           }
@@ -50,12 +54,12 @@ export default function Register ({ navigation }: NavProps): JSX.Element {
           <View className="shadow-2xl  shadow-black rounded-2xl bg-gray-100 w-[85%]  h-[70%] flex  items-center justify-center">
             <Formik
               initialValues={{
-                firstName: '',
-                lastName: '',
-                phone: '',
-                email: '',
-                password: '',
-                confirmPassword: ''
+                firstName: 'p',
+                lastName: 'v',
+                phone: '6379494632',
+                email: '19pt17@psgtech.ac.in',
+                password: '1',
+                confirmPassword: '1'
               }}
               onSubmit={handleOnSubmit}>
               {({ handleChange, handleSubmit, values }) => (
