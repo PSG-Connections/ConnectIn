@@ -1,13 +1,15 @@
-import { testLoginResponse } from '../constants/common.constant';
-import { HttpRequest } from './index';
-export async function LoginAPI (data: any) {
-  if (data.email === '19pt17@psgtech.ac.in' && data.password === '123') {
-    return testLoginResponse;
-  }
+import {HttpRequest} from './index';
+
+export async function LoginAPI(data: any) {
+  const requestBody = {
+    email: data?.email,
+    password: data?.password,
+  };
+
   const axiosOptions = {
     url: '/api/auth/login',
     method: 'POST',
-    data
+    data: requestBody,
   };
   const response = await HttpRequest(axiosOptions);
   return response;
