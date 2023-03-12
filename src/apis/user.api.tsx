@@ -32,7 +32,7 @@ export async function GetUserByEmailAPI (data: any) {
 
 export async function CheckEmailExistsAPI (data: any) {
   const axiosOptions = {
-    url: '/api/user/'.concat(data.email),
+    url: '/api/user/exist/'.concat(data.email),
     method: 'GET'
   };
   const response = await HttpRequest(axiosOptions);
@@ -41,8 +41,9 @@ export async function CheckEmailExistsAPI (data: any) {
 
 export async function ResetPasswordAPI (data: any) {
   const axiosOptions = {
-    url: '/api/user/'.concat(data.email),
-    method: 'GET'
+    url: '/api/user/reset-pwd',
+    method: 'PUT',
+    data
   };
   const response = await HttpRequest(axiosOptions);
   return response;

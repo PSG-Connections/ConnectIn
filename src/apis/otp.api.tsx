@@ -2,7 +2,8 @@
 import { HttpRequest } from './index';
 export async function SendOTPAPI (data: any) {
   const requestBody = {
-    email: data?.email
+    email: data?.email,
+    type: data?.type
   };
   const axiosOptions = {
     url: '/api/user/otp',
@@ -14,8 +15,9 @@ export async function SendOTPAPI (data: any) {
 }
 
 export async function VerifyOTPAPI (data: any) {
+  console.log(data);
   const params = {
-    email: encodeURIComponent(data?.email),
+    email: data?.email,
     otp: data?.otp
   };
   const axiosOptions = {

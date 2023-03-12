@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Image, KeyboardAvoidingView } from 'react-native';
+import { VerifyOTPAPI } from '../apis/otp.api';
 import { OTP } from '../constants/common.constant';
 import { AuthContext } from '../contexts/auth.context';
 
@@ -15,14 +16,20 @@ export default function Otp ({ navigation, route }: NavProps): JSX.Element {
     setUserData(routeData?.userData);
   }, []);
   const handleOnSubmit = async (values: any) => {
-    // const response = await VerifyOTPAPI({ email: userData.email, otp: values.otp });
-    const response = { success: true };
-    if (response === null) {
+    const reqBody = {
+      email: userData?.email,
+      otp: values.otp
+    };
+    const response = await VerifyOTPAPI(reqBody);
+    if (response?.error) {
       // handle error
+      console.log('error -->', response);
     } else {
       // handle success
-      if (routeData?.type === OTP.TYPE_OTP) {
-        authContext.dispatch({ type: 'SIGNED_IN', accessToken: '123456789876543' });
+      console.log('response', response);
+      const accessToken = response?.token?.access_token;
+      if (routeData?.type === OTP.TYPE_VERIFY_ACCOUNT) {
+        authContext.dispatch({ type: 'SIGNED_IN', accessToken });
       } else if (routeData?.type === OTP.TYPE_FORGOT_PASSWORD) {
         navigation.navigate('PasswordReset', {
           email: userData.email

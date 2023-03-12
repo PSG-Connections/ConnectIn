@@ -1,22 +1,20 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Image, KeyboardAvoidingView } from 'react-native';
 import { ResetPasswordAPI } from '../apis/user.api';
-import { AuthContext } from '../contexts/auth.context';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function PasswordReset ({ navigation, route }: NavProps): JSX.Element {
-  const authContext = useContext(AuthContext);
   const routeData = route.params;
   const handleOnSubmit = async (values: any) => {
     const response = await ResetPasswordAPI({ email: routeData?.email, password: values.password });
     if (response?.error) {
       // handle error
+      console.log('error-->', response);
     } else {
       // handle success
-      const accessToken = response?.token?.access_token;
-      authContext.dispatch({ type: 'SIGNED_IN', accessToken });
+      navigation.popToTop();
     }
   };
   return (
@@ -25,7 +23,7 @@ export default function PasswordReset ({ navigation, route }: NavProps): JSX.Ele
         <Image className="h-[30%] w-[50%] "source={require('../assets/otp.png')} />
       </TouchableWithoutFeedback>
         <View className="mb-[7%]">
-        {/* <Text className="text-black max-w-[80%] text-center">{routeData?.description}</Text> */}
+        <Text className="text-black max-w-[80%] text-center">Email  {routeData?.email}</Text>
         </View>
         <Formik
           initialValues={{ password: '', confirmPassword: '' }}
@@ -36,7 +34,7 @@ export default function PasswordReset ({ navigation, route }: NavProps): JSX.Ele
                 className="bg-gray-300 w-full rounded-full pl-4 text-black"
                 placeholder="Password"
                 secureTextEntry={true}
-                onChangeText={handleChange('email')}
+                onChangeText={handleChange('password')}
                 value={values.password}
                 placeholderTextColor={'black'}
               />
@@ -44,7 +42,7 @@ export default function PasswordReset ({ navigation, route }: NavProps): JSX.Ele
                 className="bg-gray-300 w-full rounded-full pl-4 text-black"
                 placeholder="Confirm Password"
                 secureTextEntry={true}
-                onChangeText={handleChange('email')}
+                onChangeText={handleChange('confirmPassword')}
                 value={values.confirmPassword}
                 placeholderTextColor={'black'}
               />
