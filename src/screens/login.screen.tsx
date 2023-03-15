@@ -1,5 +1,7 @@
 // /* eslint-disable @typescript-eslint/no-unused-vars */ /* eslint-disable prettier/prettier */
 
+import * as Yup from 'yup';
+
 import {
   Image,
   Keyboard,
@@ -24,6 +26,10 @@ import {validEmail} from '../constants/regex';
 type NavProps = NativeStackScreenProps<any>;
 export default function Login({navigation}: NavProps): JSX.Element {
   const authContext = useContext(AuthContext);
+  const validationSchema = Yup.object({
+    email: Yup.string().email().required('Email is required!'),
+    password: Yup.string().required('Password is required!'),
+  });
 
   const [emailErr, setEmailErr] = useState(false);
   const validate = (email: any) => {
@@ -85,10 +91,19 @@ export default function Login({navigation}: NavProps): JSX.Element {
           </Text>
         </View>
         <Formik
+          validationSchema={validationSchema}
           initialValues={{email: '', password: ''}}
           onSubmit={handleLogin}>
-          {({handleChange, handleSubmit, values}) => (
+          {({handleChange, handleSubmit, touched, errors, values}) => (
             <View className="w-[80%] flex flex-col gap-5 items-center justify-center">
+              {touched.email && errors.email ? (
+                <Text className="text-s text-red-600 font-medium">
+                  {errors.email}
+                </Text>
+              ) : (
+                <></>
+              )}
+
               <TextInput
                 className="bg-gray-200 w-full rounded-full pl-4 text-black"
                 placeholder="Email"
@@ -99,6 +114,13 @@ export default function Login({navigation}: NavProps): JSX.Element {
                 placeholderTextColor={pallete.colors.lightGrey1}
               />
 
+              {touched.password && errors.password ? (
+                <Text className="text-s text-red-600 font-medium">
+                  {errors.password}
+                </Text>
+              ) : (
+                <></>
+              )}
               <TextInput
                 className="bg-gray-200 w-full rounded-full pl-4 text-black"
                 placeholder="Password"
