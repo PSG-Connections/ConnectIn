@@ -1,7 +1,7 @@
 export const splanScreenMinTime: any = 1500; // 2 seconds
 
 export const serverURL: string =
-  'https://6481-2409-4072-6e15-3e58-4de6-3475-febf-2fbf.in.ngrok.io';
+  'https://cruel-symbols-double-106-198-107-157.loca.lt';
 
 export enum OTP {
   TYPE_VERIFY_ACCOUNT = 'VERIFY_ACCOUNT',

@@ -35,8 +35,8 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
       }
     },
     {
-      isLoading: true,
-      isSignedIn: false,
+      isLoading: false,
+      isSignedIn: true,
       isSignout: false,
       userToken: null
     }
@@ -78,7 +78,7 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
       }
     };
 
-    void bootstrapAsync();
+    // void bootstrapAsync();
   }, []);
 
   return (
