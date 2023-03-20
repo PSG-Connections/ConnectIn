@@ -12,10 +12,10 @@ export const HttpRequest = async (config: any) => {
   };
   const mergedConfig = Object.assign(defaultConfig, config);
 
-  // axios.interceptors.request.use(request => {
-  //   console.log('Starting Request', JSON.stringify(request, null, 2));
-  //   return request;
-  // });
+  axios.interceptors.request.use(request => {
+    console.log('Starting Request', JSON.stringify(request, null, 2));
+    return request;
+  });
   const response = await axios.request(mergedConfig)
     .then((response) => {
       return response?.data;

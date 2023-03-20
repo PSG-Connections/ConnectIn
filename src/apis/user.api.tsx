@@ -77,3 +77,21 @@ export async function UploadAvatarAPI (data: any) {
   const response = await HttpRequest(axiosOptions);
   return response;
 }
+
+export async function SearchUser (data: any) {
+  const params = {
+    search: data?.searchValue,
+    offset: data?.offset,
+    limit: data?.limit
+  };
+  const axiosOptions = {
+    url: '/api/user/search',
+    method: 'GET',
+    params,
+    headers: {
+      Authorization: 'Bearer '.concat(data.accessToken)
+    }
+  };
+  const response = await HttpRequest(axiosOptions);
+  return response;
+}
