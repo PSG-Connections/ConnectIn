@@ -9,26 +9,28 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 
-import {AuthContext} from '../contexts/auth.context';
-import {Formik} from 'formik';
-import {LoginAPI} from '../apis/auth.api';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { AuthContext } from '../contexts/auth.context';
+import { Formik } from 'formik';
+import { LoginAPI } from '../apis/auth.api';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
-import {ToastMessageConstants} from '../constants/toast.message.constants';
+import { ToastMessageConstants } from '../constants/toast.message.constants';
 import pallete from '../global/pallete';
-import {setEncryptedItemByKey} from '../helpers/utils';
-import {validEmail} from '../constants/regex';
+import { setEncryptedItemByKey } from '../helpers/utils';
+import { validEmail } from '../constants/regex';
+import { UserContext } from '../contexts/user.context';
 
 type NavProps = NativeStackScreenProps<any>;
-export default function Login({navigation}: NavProps): JSX.Element {
+export default function Login ({ navigation }: NavProps): JSX.Element {
   const authContext = useContext(AuthContext);
+  const userContext = useContext(UserContext);
   const validationSchema = Yup.object({
     email: Yup.string().email().required('Email is required!'),
-    password: Yup.string().required('Password is required!'),
+    password: Yup.string().required('Password is required!')
   });
 
   const [emailErr, setEmailErr] = useState(false);
@@ -60,17 +62,19 @@ export default function Login({navigation}: NavProps): JSX.Element {
       Toast.show({
         type: 'error',
         text1: ToastMessageConstants.LOGIN.ERROR,
-        text2: ToastMessageConstants.UNAUTHORIZED,
+        text2: ToastMessageConstants.UNAUTHORIZED
       });
     } else {
       const accessToken = response?.token?.access_token;
       const refreshToken = response?.token?.refresh_token;
-      const storeData = {accessToken, refreshToken};
+      const storeData = { accessToken, refreshToken };
       await storeSession(storeData);
-      authContext.dispatch({type: 'SIGNED_IN', accessToken});
+      console.log('login response--->', response);
+      userContext.SaveUserInContext(response?.user);
+      authContext.dispatch({ type: 'SIGNED_IN', accessToken });
       Toast.show({
         type: 'success',
-        text2: ToastMessageConstants.LOGIN.SUCCESS,
+        text2: ToastMessageConstants.LOGIN.SUCCESS
       });
     }
   };
@@ -92,17 +96,19 @@ export default function Login({navigation}: NavProps): JSX.Element {
         </View>
         <Formik
           validationSchema={validationSchema}
-          initialValues={{email: '', password: ''}}
+          initialValues={{ email: '', password: '' }}
           onSubmit={handleLogin}>
-          {({handleChange, handleSubmit, touched, errors, values}) => (
+          {({ handleChange, handleSubmit, touched, errors, values }) => (
             <View className="w-[80%] flex flex-col gap-5 items-center justify-center">
-              {touched.email && errors.email ? (
+              {touched.email && errors.email
+                ? (
                 <Text className="text-s text-red-600 font-medium">
                   {errors.email}
                 </Text>
-              ) : (
+                  )
+                : (
                 <></>
-              )}
+                  )}
 
               <TextInput
                 className="bg-gray-200 w-full rounded-full pl-4 text-black"
@@ -114,13 +120,15 @@ export default function Login({navigation}: NavProps): JSX.Element {
                 placeholderTextColor={pallete.colors.lightGrey1}
               />
 
-              {touched.password && errors.password ? (
+              {touched.password && errors.password
+                ? (
                 <Text className="text-s text-red-600 font-medium">
                   {errors.password}
                 </Text>
-              ) : (
+                  )
+                : (
                 <></>
-              )}
+                  )}
               <TextInput
                 className="bg-gray-200 w-full rounded-full pl-4 text-black"
                 placeholder="Password"

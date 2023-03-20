@@ -10,10 +10,7 @@ import { AuthContext } from '../contexts/auth.context';
 const mainStack = createNativeStackNavigator();
 
 export default function MainNavigation () {
-  // const isSignedIn = true;
   const authContext = useContext(AuthContext);
-  console.log(authContext.state);
-
   return (
     <NavigationContainer>
       <mainStack.Navigator>

@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
-import React, { createContext, useReducer, useEffect } from 'react';
+import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import { getEncryptedItemByKey, sleepByMilliSec } from '../helpers/utils';
 import { splanScreenMinTime } from '../constants/common.constant';
 import { getNewToken } from '../apis';
+import { GetLoggedInUserAPI } from '../apis/user.api';
+import { UserContext } from './user.context';
 
 export const AuthContext = createContext<any | null>(null);
 
 export default function AuthContextProvider({ children }: {children: any}): JSX.Element {
+  const userContext = useContext(UserContext);
   const [state, dispatch] = useReducer(
     (prevState: any, action: { type: any, accessToken?: any }) => {
       switch (action.type) {
@@ -35,8 +38,8 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
       }
     },
     {
-      isLoading: false,
-      isSignedIn: true,
+      isLoading: true,
+      isSignedIn: false,
       isSignout: false,
       userToken: null
     }
@@ -65,12 +68,21 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
           const tokenResponse = await getNewToken();
           const accessToken = tokenResponse?.authorization_details?.access_token;
           if (accessToken) {
+            const resp = await GetLoggedInUserAPI({ accessToken });
+            if (resp?.error) {
+              await SignOut(startTime);
+              return;
+            }
+            userContext.SaveUserInContext(resp?.user);
             await SignIn(startTime, accessToken);
+            return;
           } else {
             await SignOut(startTime);
+            return;
           }
         } else {
           await SignOut(startTime);
+          return;
         }
       } catch (error) {
         console.log('session get error ', error);
@@ -78,7 +90,7 @@ export default function AuthContextProvider({ children }: {children: any}): JSX.
       }
     };
 
-    // void bootstrapAsync();
+    void bootstrapAsync();
   }, []);
 
   return (

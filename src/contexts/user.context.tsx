@@ -1,38 +1,21 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useState } from 'react';
+import { User } from '../models/user.model';
 
 export const UserContext = createContext<any | null>(null);
 
 export default function UserContextProvider ({ children }: {children: any}): JSX.Element {
-  const [state, dispatch] = useReducer(
-    (prevState: any, action: { type: any, user?: any }) => {
-      switch (action.type) {
-        case 'SAVE_USER':
-          return {
-            ...prevState,
-            user: action.user
-          };
-        case 'DELETE_USER':
-          return {
-            ...prevState,
-            user: null
-          };
-      }
-    },
-    {
-      user: {}
-    }
-  );
+  const [userData, setUserData] = useState<User | null>(null);
 
-  const SaveUserInContext = async (data: any) => {
-    dispatch({ type: 'SAVE_USER', user: data });
+  const SaveUserInContext = async (data: User) => {
+    setUserData(data);
   };
 
   const ClearUserInContext = async () => {
-    dispatch({ type: 'DELETE_USER' });
+    setUserData(null);
   };
 
   return (
-        <UserContext.Provider value={{ state, SaveUserInContext, ClearUserInContext }}>
+        <UserContext.Provider value={{ userData, SaveUserInContext, ClearUserInContext }}>
             {children}
         </UserContext.Provider>
   );
