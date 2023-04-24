@@ -10,7 +10,7 @@ import FeedNavigation from './feed.navigation';
 import SearchNavigation from './search.navigation';
 import PostNavigation from './post.navigation';
 import NotificationNavigation from './notifications.navigation';
-import Profile from '../screens/profile.screen';
+import ProfileScreenNavigation from './profile.navigation';
 
 const homeNavigation = createBottomTabNavigator();
 
@@ -31,8 +31,7 @@ export default function HomeNavigation (): JSX.Element {
               }
             : {}}/>
         ),
-        headerShown: true,
-        headerTitle: 'PSG Connect'
+        headerShown: false
       }}/>
       <homeNavigation.Screen name="Search" component={SearchNavigation} options={{
         tabBarIcon: ({ focused, color, size }) => (
@@ -71,7 +70,7 @@ export default function HomeNavigation (): JSX.Element {
           )
         }}
       />
-      <homeNavigation.Screen name="Profile" component={Profile} options={{
+      <homeNavigation.Screen name="Profile" component={ProfileScreenNavigation} options={{
         tabBarIcon: ({ focused, color, size }) => (
           <Ionicons name='person-circle' color='black' size={35} style={focused
             ? {

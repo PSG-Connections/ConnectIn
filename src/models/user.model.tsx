@@ -45,3 +45,8 @@ export interface UserExperience {
   end_date: string
   currently_working: boolean
 }
+
+export interface UserProfileProps {
+  userDetails: User
+  loggedInUser: boolean
+}

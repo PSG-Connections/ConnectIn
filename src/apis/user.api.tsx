@@ -63,11 +63,11 @@ export async function ResetPasswordAPI (data: any) {
 }
 
 export async function UploadAvatarAPI (data: any) {
-  // data && console.log('DATA ----------->', data.get('uri'));
+  console.log('DATA ----------->', data.formdata);
   const axiosOptions = {
     url: '/api/user/profile-image',
     method: 'POST',
-    data: data.formData,
+    data: data.formdata,
     headers: {
       Authorization:
         'Bearer '.concat(data.accessToken),

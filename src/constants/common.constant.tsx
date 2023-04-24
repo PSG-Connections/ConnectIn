@@ -1,6 +1,7 @@
 export const splanScreenMinTime: any = 1500; // 2 seconds
 
-export const serverURL: string = 'https://3464-2409-4072-6d17-8b4a-e919-c85f-f615-b86d.in.ngrok.io';
+export const profileServerURL: string = 'https://api.psglinkedin.tech/profile';
+export const postServerURL: string = 'https://api.psglinkedin.tech/post';
 
 export enum OTP {
   TYPE_VERIFY_ACCOUNT = 'VERIFY_ACCOUNT',

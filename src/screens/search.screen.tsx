@@ -31,6 +31,9 @@ export default function Search ({ navigation, route }: NavProps): JSX.Element {
       setshowSearchAll(true);
     }
     console.log(response?.user);
+    if (response?.user.length === 0 || response?.user.length < limit) {
+      setshowSearchAll(false);
+    }
     setsearchResults(response?.user);
   };
   return (
