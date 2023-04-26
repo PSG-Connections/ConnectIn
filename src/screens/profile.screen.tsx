@@ -1,23 +1,23 @@
 import {
+  Button,
   Image,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
-  Button,
-  RefreshControl
 } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import {GetLoggedInUserAPI, UploadAvatarAPI} from '../apis/user.api';
+import React, {useContext, useEffect, useState} from 'react';
 
-import { AuthContext } from '../contexts/auth.context';
-
-import { GetLoggedInUserAPI, UploadAvatarAPI } from '../apis/user.api';
-import { clearEncryptedItemByKey } from '../helpers/utils';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {AuthContext} from '../contexts/auth.context';
 import Experience from '../components/experienceTab.component';
-import { User } from '../models/user.model';
-import { UserContext } from '../contexts/user.context';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {User} from '../models/user.model';
+import {UserContext} from '../contexts/user.context';
+import {clearEncryptedItemByKey} from '../helpers/utils';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const options: any = {
   title: 'Select Image',
@@ -27,11 +27,12 @@ const options: any = {
   options: {
     selectionLimit: 0,
     mediaType: 'photo',
-    includeBase64: true
-  }
+    includeBase64: true,
+  },
 };
+type NavProps = NativeStackScreenProps<any>;
 
-export default function Profile (): JSX.Element {
+export default function Profile({navigation}: NavProps): JSX.Element {
   const authContext = useContext(AuthContext);
   const userContext = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -52,7 +53,7 @@ export default function Profile (): JSX.Element {
   }, []);
   const getLoggedInUser = async () => {
     const accessToken = authContext.state.userToken;
-    const resp = await GetLoggedInUserAPI({ accessToken });
+    const resp = await GetLoggedInUserAPI({accessToken});
     return resp;
   };
   // const [avatar, setAvatar] = React.useState<any>();
@@ -88,10 +89,14 @@ export default function Profile (): JSX.Element {
     formData.append('type', images.assets?.[0].type as string);
     formData.append('name', images.assets?.[0].fileName as string);
     const accessToken = authContext.state.userToken;
-    const response = await UploadAvatarAPI({ formData, accessToken });
+    const response = await UploadAvatarAPI({formData, accessToken});
     console.log('res', response);
     // let responseJson = await response.json();
     // console.log('resJson', responseJson);
+  };
+
+  const handlePress = () => {
+    navigation.navigate('Introduction');
   };
 
   const handleOnPressLogOut = async () => {
@@ -102,11 +107,13 @@ export default function Profile (): JSX.Element {
     } catch (error) {
       console.log(error);
     }
-    authContext.dispatch({ type: 'SIGNED_OUT' });
+    authContext.dispatch({type: 'SIGNED_OUT'});
   };
   return (
     <SafeAreaView className=" h-screen w-screen">
-      <ScrollView className="flex flex-col" refreshControl={
+      <ScrollView
+        className="flex flex-col"
+        refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         {/* Cover & Profile Picture */}
@@ -134,18 +141,28 @@ export default function Profile (): JSX.Element {
             />
           </View>
         </View>
+        <TouchableOpacity onPress={handlePress}>
+          <View className="pt-2 items-end pr-2">
+            <Image
+              className="h-[25px] w-[25px]  "
+              source={require('../assets/edit.png')}
+            />
+          </View>
+        </TouchableOpacity>
 
         {/* Profile Main content */}
         <View className="pt-20 flex flex-col pb-2">
           <View className="pl-2 pt-5">
             <Button onPress={openGallery} title="Upload"></Button>
-            <Text className="text-black font-black text-[20px]">{userData?.first_name} {userData?.last_name}</Text>
+            <Text className="text-black font-black text-[20px]">
+              {userData?.first_name} {userData?.last_name}
+            </Text>
             {/* <Text className="text-black text-[16px] font-medium">MSc 2K19</Text> */}
             <Text className="text-black text-[16px] font-medium">
               {userData?.headline}
             </Text>
             <Text className="text-black text-[16px] font-medium">
-                {userData?.city}, {userData?.country}
+              {userData?.city}, {userData?.country}
             </Text>
           </View>
         </View>
@@ -172,11 +189,8 @@ export default function Profile (): JSX.Element {
               />
             </View>
           </View>
-          {userData?.UserExperience.map((item) => (
-            <Experience
-              key={item.ID}
-              data={item}
-            />
+          {userData?.UserExperience.map(item => (
+            <Experience key={item.ID} data={item} />
           ))}
         </View>
 
