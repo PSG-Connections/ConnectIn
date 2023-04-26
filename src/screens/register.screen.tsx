@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -9,7 +9,6 @@ import React from 'react';
 import { RegisterUserAPI } from '../apis/user.api';
 import { SendOTPAPI } from '../apis/otp.api';
 import { StyledSafeAreaView } from '../styles/index';
-import pallete from '../global/pallete';
 import { validEmail } from '../constants/regex';
 
 type NavProps = NativeStackScreenProps<any>;
@@ -220,7 +219,7 @@ export default function Register ({ navigation }: NavProps): JSX.Element {
                         placeholderTextColor={'black'}
                       />
                     </View>
-                    <View className="h-[10%] w-[100%] items-center	">
+                    <View className="h-[10%] w-[100%] items-center">
                       <TouchableOpacity
                         onPress={() => {
                           handleSubmit();

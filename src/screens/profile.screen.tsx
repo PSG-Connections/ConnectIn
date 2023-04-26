@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   RefreshControl,
-  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity
+  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity, Button
 } from 'react-native';
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { User } from '../models/user.model';
@@ -13,9 +13,11 @@ import Experience from '../components/experienceTab.component';
 import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
 import ProfileHeader from '../components/profileHeader.component';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 // import { axiosPut } from '../apis';
 
-export default function ProfileScreen (): JSX.Element {
+type NavProps = NativeStackScreenProps<any>;
+export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   const authContext = useContext(AuthContext);
   const userContext = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -36,6 +38,8 @@ export default function ProfileScreen (): JSX.Element {
     }, 2000);
   }, []);
   useEffect(() => {
+    console.log('profile use effect called-->');
+    // navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } });
     // console.log('useEffect 1 called ----->>');
     void (async () => {
       const resp = await getLoggedInUser();
@@ -57,7 +61,7 @@ export default function ProfileScreen (): JSX.Element {
   const getLoggedInUser = async () => {
     console.log('in function --> getLoggedInUser');
     const accessToken = authContext.state.userToken;
-    await getUserResume();
+    // await getUserResume();
     const resp = await GetLoggedInUserAPI({ accessToken });
     // handle errors
     return resp;
@@ -142,7 +146,9 @@ export default function ProfileScreen (): JSX.Element {
         }>
         {/* Cover & Profile Picture */}
         <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto}/>
-
+        <Button title='Update data' onPress={() => {
+          navigation.navigate('UserUpdateScreen', userData);
+        }}></Button>
         {/* Line */}
         <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
 

@@ -1,18 +1,18 @@
-import Introduction from '../screens/introduction.screen';
-import Profile from '../screens/profile.screen';
+import ProfileScreen from '../screens/profile.screen';
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import UserUpdateScreen from '../screens/userUpdate.screen';
 
 const profileNavigation = createNativeStackNavigator();
 
-export default function ProfileNavigation (): JSX.Element {
+export default function ProfileNavigation ({ navigation }: any): JSX.Element {
   return (
     <profileNavigation.Navigator screenOptions={{ headerShown: false }}>
       <profileNavigation.Screen
         name="ProfileNavigationStack"
-        component={Profile}
+        component={ProfileScreen}
       />
-      <profileNavigation.Screen name="Introduction" component={Introduction} />
+      <profileNavigation.Screen name="UserUpdateScreen" component={UserUpdateScreen}/>
     </profileNavigation.Navigator>
   );
 }

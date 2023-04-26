@@ -11,6 +11,7 @@ import SearchNavigation from './search.navigation';
 import PostNavigation from './post.navigation';
 import NotificationNavigation from './notifications.navigation';
 import ProfileNavigation from './profile.navigation';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const homeNavigation = createBottomTabNavigator();
 
@@ -70,7 +71,8 @@ export default function HomeNavigation (): JSX.Element {
           )
         }}
       />
-      <homeNavigation.Screen name="Profile" component={ProfileNavigation} options={{
+
+      <homeNavigation.Screen name="Profile" component={ProfileNavigation} options={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => (
           <Ionicons name='person-circle' color='black' size={35} style={focused
             ? {
@@ -79,8 +81,14 @@ export default function HomeNavigation (): JSX.Element {
                 paddingTop: 5
               }
             : {}}/>
-        )
-      }}/>
+        ),
+        tabBarStyle: ((route) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+          if (routeName === 'UserUpdateScreen') {
+            return { display: 'none' };
+          }
+        })(route)
+      })}/>
     </homeNavigation.Navigator>
   );
 }
