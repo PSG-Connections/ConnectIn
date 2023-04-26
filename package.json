@@ -19,6 +19,8 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.71.3",
+    "react-native-blob-util": "^0.17.3",
+    "react-native-document-picker": "^8.2.0",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.9.0",
@@ -31,6 +33,7 @@
     "react-native-screens": "^3.20.0",
     "react-native-toast-message": "^2.1.6",
     "react-native-vector-icons": "^9.2.0",
+    "react-native-webview": "^12.0.2",
     "regex": "^0.1.1",
     "yup": "^1.0.2"
   },

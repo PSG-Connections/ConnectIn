@@ -3,20 +3,11 @@ import { getEncryptedItemByKey } from '../helpers/utils';
 import { profileServerURL } from '../constants/common.constant';
 
 export const HttpRequest = async (config: any) => {
-  const defaultConfig = {
-    baseURL: profileServerURL,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
-  };
-  const mergedConfig = Object.assign(defaultConfig, config);
-
   // axios.interceptors.request.use(request => {
   //   console.log('Starting Request', JSON.stringify(request, null, 2));
   //   return request;
   // });
-  const response = await axios.request(mergedConfig)
+  const response = await axios.request(config)
     .then((response) => {
       return response?.data;
     })
@@ -25,8 +16,8 @@ export const HttpRequest = async (config: any) => {
         const tokenResponse: any = await getNewToken();
         const newToken: string = tokenResponse?.authorization_details?.access_token;
         if (newToken) {
-          mergedConfig.headers.Authorization = `Bearer ${newToken}`;
-          const retryResponse = await axios.request(mergedConfig)
+          config.headers.Authorization = `Bearer ${newToken}`;
+          const retryResponse = await axios.request(config)
             .then((response) => {
               return response?.data;
             })
@@ -63,5 +54,19 @@ export const getNewToken = async () => {
 
     return null;
   });
+  return response;
+};
+
+export const axiosPut = async (data: any) => {
+  console.log('----<<<>>>', data);
+  const response = await axios.put(data?.url, data?.body, data?.options)
+    .then((response) => {
+      console.log('response status-->', response.status);
+      console.log('response data-->', response.data);
+      return response;
+    })
+    .catch((error) => {
+      console.log('axiosPost error --> ', error);
+    });
   return response;
 };

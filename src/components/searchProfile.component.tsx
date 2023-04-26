@@ -15,7 +15,7 @@ import ProfileHeader from '../components/profileHeader.component';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 // import { axiosPut } from '../apis';
 
-export default function ProfileScreen (): JSX.Element {
+export default function SearchProfile (): JSX.Element {
   const authContext = useContext(AuthContext);
   const userContext = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -44,6 +44,10 @@ export default function ProfileScreen (): JSX.Element {
       setUserData(resp?.user);
     })();
   }, []);
+
+  useEffect(() => {
+    // console.log('useEffect 2 called ----->>');
+  }, [userData]);
 
   const getUserResume = async () => {
     const accessToken = authContext.state.userToken;
@@ -136,135 +140,135 @@ export default function ProfileScreen (): JSX.Element {
     return resp?.url;
   };
   return (
-    <SafeAreaView className=" h-screen w-screen pb-12">
-      <ScrollView className="flex flex-col" refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-        {/* Cover & Profile Picture */}
-        <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto}/>
+      <SafeAreaView className=" h-screen w-screen pb-12">
+        <ScrollView className="flex flex-col" refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          {/* Cover & Profile Picture */}
+          <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto}/>
 
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+          {/* Line */}
+          <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
 
-        {/* Experience */}
-        <View className="pt-5 pl-2 pb-2">
-          <View className="flex flex-row ">
-            <Text className="text-black font-black text-[20px] w-[70%] ">
-              Experience
-            </Text>
-            <View className='flex flex-row justify-around'>
-            <View className="w-[15%] flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/plus.png')}
-              />
-            </View>
-            {userData?.UserExperience && userData?.UserExperience.length > 0 && <View className="w-[15%]  flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/edit.png')}
-              />
-            </View>}
-            </View>
-          </View>
-          {userData?.UserExperience.map((item) => (
-            <Experience
-              key={item.ID}
-              data={item}
-            />
-          ))}
-        </View>
-
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
-
-        {/* Education */}
-        <View className="pt-5 pl-2 pb-2">
-          <View className="flex flex-row ">
-            <Text className="text-black font-black text-[20px] w-[70%] ">
-              Education
-            </Text>
-            <View className='flex flex-row justify-around'>
-            <View className="w-[15%] flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/plus.png')}
-              />
-            </View>
-            {userData?.UserEducation && userData?.UserEducation.length > 0 && <View className="w-[15%]  flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/edit.png')}
-              />
-            </View>}
-            </View>
-          </View>
-          {userData?.UserEducation.map((item) => (
-            <EducationTab
-              key={item.user_id}
-              data={item}
-            />
-          ))}
-        </View>
-
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
-
-        {/* Resume */}
-        <View className="pt-5 pl-2 mb-4">
-          <View className="flex flex-row ">
-            <Text className="text-black font-black text-[20px] w-[70%] ">
-              Resume
-            </Text>
-            <View className='flex flex-row justify-around'>
-            <View className="w-[15%] flex items-center">
-            <TouchableOpacity onPress={() => {
-              console.log('upload pressed');
-              void (async () => {
-                await handleUploadResume();
-              })();
-            }}>
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/plus.png')}
+          {/* Experience */}
+          <View className="pt-5 pl-2 pb-2">
+            <View className="flex flex-row ">
+              <Text className="text-black font-black text-[20px] w-[70%] ">
+                Experience
+              </Text>
+              <View className='flex flex-row justify-around'>
+              <View className="w-[15%] flex items-center">
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/plus.png')}
                 />
-            </TouchableOpacity>
-            </View>
-            <View className="w-[15%] flex items-center">
-            <TouchableOpacity onPress={() => {
-              console.log('upload pressed');
-              void (async () => {
-                // handle delete resume
-              })();
-            }}>
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/delete.png')}
-                />
-            </TouchableOpacity>
-            </View>
-            </View>
-          </View>
-          <View className='flex mt-5 justify-center pr-2'>
-            <View className='flex  h-10  bg-blue-400 items-center'>
-            <TouchableOpacity onPress={() => {
-              console.log('View resume pressed');
-              void (async () => {
-                await Linking.openURL(userResumeUrl as string);
-              })();
-            }}>
-              <View className='w-[100%] h-[100%] flex justify-center'>
-                <Text className='text-black'>View Resume</Text>
               </View>
-            </TouchableOpacity>
+              {userData?.UserExperience && userData?.UserExperience.length > 0 && <View className="w-[15%]  flex items-center">
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/edit.png')}
+                />
+              </View>}
+              </View>
+            </View>
+            {userData?.UserExperience.map((item) => (
+              <Experience
+                key={item.ID}
+                data={item}
+              />
+            ))}
+          </View>
+
+          {/* Line */}
+          <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+
+          {/* Education */}
+          <View className="pt-5 pl-2 pb-2">
+            <View className="flex flex-row ">
+              <Text className="text-black font-black text-[20px] w-[70%] ">
+                Education
+              </Text>
+              <View className='flex flex-row justify-around'>
+              <View className="w-[15%] flex items-center">
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/plus.png')}
+                />
+              </View>
+              {userData?.UserEducation && userData?.UserEducation.length > 0 && <View className="w-[15%]  flex items-center">
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/edit.png')}
+                />
+              </View>}
+              </View>
+            </View>
+            {userData?.UserEducation.map((item) => (
+              <EducationTab
+                key={item.user_id}
+                data={item}
+              />
+            ))}
+          </View>
+
+          {/* Line */}
+          <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+
+          {/* Resume */}
+          <View className="pt-5 pl-2 mb-4">
+            <View className="flex flex-row ">
+              <Text className="text-black font-black text-[20px] w-[70%] ">
+                Resume
+              </Text>
+              <View className='flex flex-row justify-around'>
+              <View className="w-[15%] flex items-center">
+              <TouchableOpacity onPress={() => {
+                console.log('upload pressed');
+                void (async () => {
+                  await handleUploadResume();
+                })();
+              }}>
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/plus.png')}
+                  />
+              </TouchableOpacity>
+              </View>
+              <View className="w-[15%] flex items-center">
+              <TouchableOpacity onPress={() => {
+                console.log('upload pressed');
+                void (async () => {
+                  // handle delete resume
+                })();
+              }}>
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/delete.png')}
+                  />
+              </TouchableOpacity>
+              </View>
+              </View>
+            </View>
+            <View className='flex mt-5 justify-center pr-2'>
+              <View className='flex  h-10  bg-blue-400 items-center'>
+              <TouchableOpacity onPress={() => {
+                console.log('View resume pressed');
+                void (async () => {
+                  await Linking.openURL(userResumeUrl as string);
+                })();
+              }}>
+                <View className='w-[100%] h-[100%] flex justify-center'>
+                  <Text className='text-black'>View Resume</Text>
+                </View>
+              </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
 
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
-      </ScrollView>
+          {/* Line */}
+          <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+        </ScrollView>
 
-    </SafeAreaView>
+      </SafeAreaView>
   );
 }

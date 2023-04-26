@@ -1,6 +1,14 @@
-// import { testLoginResponse } from '../constants/common.constant';
-
+import { profileServerURL } from '../constants/common.constant';
 import { HttpRequest } from './index';
+import RNFetchBlob from 'react-native-blob-util';
+
+const defaultConfig = {
+  baseURL: profileServerURL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  }
+};
 
 export async function RegisterUserAPI (data: any) {
   const requestBody = {
@@ -15,7 +23,8 @@ export async function RegisterUserAPI (data: any) {
     method: 'POST',
     data: requestBody
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -27,7 +36,8 @@ export async function GetUserByEmailAPI (data: any) {
       Authorization: 'Bearer '.concat(data.accessToken)
     }
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -39,7 +49,8 @@ export async function GetLoggedInUserAPI (data: any) {
       Authorization: 'Bearer '.concat(data.accessToken)
     }
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -48,7 +59,8 @@ export async function CheckEmailExistsAPI (data: any) {
     url: '/api/user/exist/'.concat(data.email),
     method: 'GET'
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -58,7 +70,8 @@ export async function ResetPasswordAPI (data: any) {
     method: 'PUT',
     data
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -74,7 +87,8 @@ export async function UploadAvatarAPI (data: any) {
       'Content-Type': 'multipart/form-data'
     }
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -92,6 +106,50 @@ export async function SearchUser (data: any) {
       Authorization: 'Bearer '.concat(data.accessToken)
     }
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
+}
+
+export async function GetUserResumeUploadUrl (data: any) {
+  const axiosOptions = {
+    url: '/api/user/resume/upload',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer '.concat(data.accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function GetLoggedInUserResumeUrl (data: any) {
+  const axiosOptions = {
+    url: '/api/user/resume',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer '.concat(data.accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function UploadResumeToCloud ({ presignedUrl, Fileuri }: any) {
+  RNFetchBlob.fetch(
+    'PUT',
+    presignedUrl,
+    {
+      'Content-Type': 'application/pdf'
+    },
+    RNFetchBlob.wrap(Fileuri)
+  )
+    .then(res => {
+      console.log(res);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }

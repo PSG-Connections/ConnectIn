@@ -44,9 +44,16 @@ export interface UserExperience {
   start_date: string
   end_date: string
   currently_working: boolean
+  employement_type: string
 }
 
 export interface UserProfileProps {
-  userDetails: User
-  loggedInUser: boolean
+  LoggedInUser: boolean
+  first_name: string
+  last_name: string
+  country: string
+  city: string
+  headline: string
+  profile_image_url: string
+  cover_image_url: string
 }

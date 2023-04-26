@@ -33,7 +33,7 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
     password: Yup.string().required('Password is required!')
   });
 
-  const [emailErr, setEmailErr] = useState(false);
+  const [, setEmailErr] = useState(false);
   const validate = (email: any) => {
     if (validEmail.test(email)) {
       console.log('Valid Email');

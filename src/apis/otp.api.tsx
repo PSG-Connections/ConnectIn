@@ -1,5 +1,14 @@
 // import { testLoginResponse } from '../constants/common.constant';
+import { profileServerURL } from '../constants/common.constant';
 import { HttpRequest } from './index';
+const defaultConfig = {
+  baseURL: profileServerURL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  }
+};
+
 export async function SendOTPAPI (data: any) {
   const requestBody = {
     email: data?.email,
@@ -10,7 +19,8 @@ export async function SendOTPAPI (data: any) {
     method: 'POST',
     data: requestBody
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }
 
@@ -25,6 +35,7 @@ export async function VerifyOTPAPI (data: any) {
     method: 'GET',
     params
   };
-  const response = await HttpRequest(axiosOptions);
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
   return response;
 }

@@ -6,6 +6,7 @@ import { ConvertISOToMonthYear } from '../helpers/dateTime';
 export default function Experience (props: any) {
   const startDate = ConvertISOToMonthYear(props?.data?.start_date);
   const endDate = ConvertISOToMonthYear(props?.data?.end_date);
+  const employemenType: string = props?.data?.employement_type.toLowerCase();
   return (
         <View className="flex flex-col gap-5 pt-4 pb-4">
         <View className="flex flex-row   gap-3">
@@ -18,7 +19,7 @@ export default function Experience (props: any) {
               {props?.data?.title}
             </Text>
             <Text className="text-black text-[11px] font-semibold">
-              {props?.data?.company}
+              {props?.data?.company}  .  {employemenType}
             </Text>
             <Text className="text-black text-[10px] font-medium">
               {startDate} - {endDate}

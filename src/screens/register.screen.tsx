@@ -1,26 +1,26 @@
 import * as Yup from 'yup';
 
-import {Form, Formik} from 'formik';
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
+import { Form, Formik } from 'formik';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {OTP} from '../constants/common.constant';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { OTP } from '../constants/common.constant';
 import React from 'react';
-import {RegisterUserAPI} from '../apis/user.api';
-import {SendOTPAPI} from '../apis/otp.api';
-import {StyledSafeAreaView} from '../styles/index';
+import { RegisterUserAPI } from '../apis/user.api';
+import { SendOTPAPI } from '../apis/otp.api';
+import { StyledSafeAreaView } from '../styles/index';
 import pallete from '../global/pallete';
-import {validEmail} from '../constants/regex';
+import { validEmail } from '../constants/regex';
 
 type NavProps = NativeStackScreenProps<any>;
-export default function Register({navigation}: NavProps): JSX.Element {
+export default function Register ({ navigation }: NavProps): JSX.Element {
   const userInfo = {
     firstName: '',
     lastName: '',
     phone: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   };
   const [pwdVisible] = React.useState(true);
   const validationSchema = Yup.object({
@@ -43,8 +43,8 @@ export default function Register({navigation}: NavProps): JSX.Element {
       .required('Password is required!'),
     confirmPassword: Yup.string().equals(
       [Yup.ref('password')],
-      'Passwords do not match!',
-    ),
+      'Passwords do not match!'
+    )
   });
 
   const handleOnSubmit = async (values: any) => {
@@ -57,7 +57,7 @@ export default function Register({navigation}: NavProps): JSX.Element {
       console.log('sending otp');
       const reqBody = {
         email: values.email,
-        type: OTP.TYPE_VERIFY_ACCOUNT,
+        type: OTP.TYPE_VERIFY_ACCOUNT
       };
       const response = await SendOTPAPI(reqBody);
       if (response?.error) {
@@ -70,8 +70,8 @@ export default function Register({navigation}: NavProps): JSX.Element {
           type: OTP.TYPE_VERIFY_ACCOUNT,
           description: OTP.DESCRIPTION_VERIFY_ACCOUNT,
           userData: {
-            email: values.email,
-          },
+            email: values.email
+          }
         });
       }
     }
@@ -92,7 +92,7 @@ export default function Register({navigation}: NavProps): JSX.Element {
                 handleBlur,
                 touched,
                 values,
-                errors,
+                errors
               }) => {
                 const {
                   firstName,
@@ -100,18 +100,20 @@ export default function Register({navigation}: NavProps): JSX.Element {
                   phone,
                   email,
                   password,
-                  confirmPassword,
+                  confirmPassword
                 } = values;
                 return (
                   <View className="h-[80%] w-[80%] flex flex-col gap-5 items-center ">
                     <View className="h-[10%] w-[100%]">
-                      {touched.firstName && errors.firstName ? (
+                      {touched.firstName && errors.firstName
+                        ? (
                         <Text className="text-s text-red-600 font-medium">
                           {errors.firstName}
                         </Text>
-                      ) : (
+                          )
+                        : (
                         <></>
-                      )}
+                          )}
                       <TextInput
                         className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4 text-black"
                         placeholder="First Name"
@@ -123,13 +125,15 @@ export default function Register({navigation}: NavProps): JSX.Element {
                       />
                     </View>
                     <View className="h-[10%] w-[100%]">
-                      {touched.lastName && errors.lastName ? (
+                      {touched.lastName && errors.lastName
+                        ? (
                         <Text className="text-s text-red-600 font-medium">
                           {errors.lastName}
                         </Text>
-                      ) : (
+                          )
+                        : (
                         <></>
-                      )}
+                          )}
                       <TextInput
                         className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4 text-black"
                         placeholder="Last Name"
@@ -141,13 +145,15 @@ export default function Register({navigation}: NavProps): JSX.Element {
                       />
                     </View>
                     <View className="h-[10%] w-[100%]">
-                      {touched.phone && errors.phone ? (
+                      {touched.phone && errors.phone
+                        ? (
                         <Text className="text-s text-red-600 font-medium">
                           {errors.phone}
                         </Text>
-                      ) : (
+                          )
+                        : (
                         <></>
-                      )}
+                          )}
                       <TextInput
                         className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4 text-black"
                         placeholder="Phone"
@@ -158,13 +164,15 @@ export default function Register({navigation}: NavProps): JSX.Element {
                       />
                     </View>
                     <View className="h-[10%] w-[100%]">
-                      {touched.email && errors.email ? (
+                      {touched.email && errors.email
+                        ? (
                         <Text className="text-s text-red-600 font-medium">
                           {errors.email}
                         </Text>
-                      ) : (
+                          )
+                        : (
                         <></>
-                      )}
+                          )}
                       <TextInput
                         className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4 text-black"
                         placeholder="Email"
@@ -175,13 +183,15 @@ export default function Register({navigation}: NavProps): JSX.Element {
                       />
                     </View>
                     <View className="h-[10%] w-[100%]">
-                      {touched.password && errors.password ? (
+                      {touched.password && errors.password
+                        ? (
                         <Text className="text-s text-red-600 font-medium">
                           {errors.password}
                         </Text>
-                      ) : (
+                          )
+                        : (
                         <></>
-                      )}
+                          )}
                       <TextInput
                         className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4 text-black"
                         placeholder="Password"
@@ -192,13 +202,15 @@ export default function Register({navigation}: NavProps): JSX.Element {
                       />
                     </View>
                     <View className="h-[10%] w-[100%] mb-10">
-                      {touched.confirmPassword && errors.confirmPassword ? (
+                      {touched.confirmPassword && errors.confirmPassword
+                        ? (
                         <Text className="text-s text-red-600 font-medium">
                           {errors.confirmPassword}
                         </Text>
-                      ) : (
+                          )
+                        : (
                         <></>
-                      )}
+                          )}
                       <TextInput
                         className="bg-[#ECEBEB] font-bold w-full rounded-full pl-4 text-black"
                         placeholder="Confirm Password"

@@ -20,7 +20,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
   const handleOnPressLogOut = async () => {
     try {
       console.log('logout clearing session');
-
+      // need to clear usercontext, authcontext
       await clearEncryptedItemByKey('user_session');
     } catch (error) {
       console.log(error);
@@ -72,7 +72,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
         </View>
       </Modal>
       <ScrollView>
-        <View className="h-screen bg-red-100 items-center justify-center">
+        <View className="h-screen bg-red-100 items-center justify-center pb-10">
           <Text className="text-black">Feed here ...............</Text>
         </View>
       </ScrollView>

@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import Search from '../screens/search.screen';
+import SearchProfile from '../components/searchProfile.component';
 const searchNavigation = createNativeStackNavigator();
 
 export default function SearchNavigation (): JSX.Element {
@@ -9,6 +10,10 @@ export default function SearchNavigation (): JSX.Element {
       <searchNavigation.Screen
         name="SearchNavigationStack"
         component={Search}
+      />
+      <searchNavigation.Screen
+        name="SearchProfile"
+        component={SearchProfile}
       />
     </searchNavigation.Navigator>
   );
