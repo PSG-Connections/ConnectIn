@@ -167,11 +167,8 @@ export default function ProfileScreen (): JSX.Element {
             </View>}
             </View>
           </View>
-          {userData?.UserExperience.map((item) => (
-            <Experience
-              key={item.ID}
-              data={item}
-            />
+          {userData?.UserExperience.map(item => (
+            <Experience key={item.ID} data={item} />
           ))}
         </View>
 

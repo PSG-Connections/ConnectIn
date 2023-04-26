@@ -1,5 +1,6 @@
+import { Image, Text, View } from 'react-native';
+
 import React from 'react';
-import { View, Image, Text } from 'react-native';
 
 export default function Usersearchresult (props: any): JSX.Element {
   return (

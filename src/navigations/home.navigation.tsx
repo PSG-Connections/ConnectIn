@@ -10,7 +10,7 @@ import FeedNavigation from './feed.navigation';
 import SearchNavigation from './search.navigation';
 import PostNavigation from './post.navigation';
 import NotificationNavigation from './notifications.navigation';
-import ProfileScreenNavigation from './profile.navigation';
+import ProfileNavigation from './profile.navigation';
 
 const homeNavigation = createBottomTabNavigator();
 
@@ -70,7 +70,7 @@ export default function HomeNavigation (): JSX.Element {
           )
         }}
       />
-      <homeNavigation.Screen name="Profile" component={ProfileScreenNavigation} options={{
+      <homeNavigation.Screen name="Profile" component={ProfileNavigation} options={{
         tabBarIcon: ({ focused, color, size }) => (
           <Ionicons name='person-circle' color='black' size={35} style={focused
             ? {
