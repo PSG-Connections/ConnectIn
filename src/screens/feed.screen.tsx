@@ -37,7 +37,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
             />
         </TouchableOpacity>
         <View className='flex justify-center mr-[4%]'>
-          <Text className='text-black text-xl'>PSGLINKEDIN</Text>
+          <Text className='text-black text-xl'>Connect-In</Text>
         </View>
       </View>
       <Modal
@@ -54,17 +54,42 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
       >
         <View className='h-full flex flex-row'>
           <View className='w-[65%] bg-white flex h-screen'>
-            <Text className='text-black'>Welcome</Text>
-            <View className="bg-red-400 flex items-center justify-center absolute bottom-0 w-full">
-              <TouchableOpacity
-                onPress={() => {
-                  void (async () => {
-                    await handleOnPressLogOut();
-                  })();
-                }}
-                className='flex items-center'>
-                <Text className="font-bold text-[#1079D9] pt-4 flex">Log Out</Text>
-              </TouchableOpacity>
+            <View className='flex h-screen'>
+              <View>
+                <View className='h-[130px] bg-slate-600 flex'>
+
+                </View>
+                <View className='flex justify-center items-center realtive -translate-y-[60px]'>
+                  <Image
+                    className="h-[120px] w-[120px] rounded-full flex"
+                    source={(userImageUri) ? { uri: userImageUri } : require('../assets/profile.png')}
+                  />
+                </View>
+                <View className='flex items-center -translate-y-10'>
+                  <Text className='text-black text-[19px]'>{userContext.userData.first_name} {userContext.userData.last_name}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(false);
+                      navigation.navigate('Profile');
+                    }}
+                    className='mt-1'
+                  >
+                    <Text className='text-slate-500'>View Profile</Text>
+                  </TouchableOpacity>
+                </View>
+                <View className='border-solid border-t-2 border-slate-300'></View>
+              </View>
+              <View className="bg-red-600 flex items-center h-[40px] justify-center rounded-full absolute bottom-2 w-[95%] mx-2">
+                <TouchableOpacity
+                  onPress={() => {
+                    void (async () => {
+                      await handleOnPressLogOut();
+                    })();
+                  }}
+                  className='flex items-center justify-center'>
+                  <Text className="font-bold text-white flex">Log Out</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <TouchableOpacity className='w-[35%] flex' onPress={() => { setModalVisible(false); }} activeOpacity={1}>

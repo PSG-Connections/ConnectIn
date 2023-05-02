@@ -9,11 +9,14 @@ import { UserContext } from '../contexts/user.context';
 import { AuthContext } from '../contexts/auth.context';
 import { GetLoggedInUserAPI, GetLoggedInUserResumeUrl, GetUserResumeUploadUrl, UploadAvatarAPI, UploadResumeToCloud } from '../apis/user.api';
 import EducationTab from '../components/educationTab.component';
-import Experience from '../components/experienceTab.component';
+import ExperienceTab from '../components/experienceTab.component';
 import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
 import ProfileHeader from '../components/profileHeader.component';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { emitter } from '../constants/events';
+import { USERUPDATE } from '../constants/common.constant';
+// import { useFocusEffect } from '@react-navigation/native';
 // import { axiosPut } from '../apis';
 
 type NavProps = NativeStackScreenProps<any>;
@@ -23,7 +26,11 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   const [refreshing, setRefreshing] = React.useState(false);
   const [userData, setUserData] = useState<User>();
   const [userResumeUrl, setUserResumeUrl] = useState<string>();
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // useFocusEffect(() => {
+  //   console.log('screen - profile focussed');
+  //   // do any re-fetching or re-rendering here
+  // });
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -41,12 +48,20 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
     console.log('profile use effect called-->');
     // navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } });
     // console.log('useEffect 1 called ----->>');
-    void (async () => {
-      const resp = await getLoggedInUser();
-      // handle errors
-      userContext.SaveUserInContext(resp?.user);
-      setUserData(resp?.user);
-    })();
+    const handleUserUpdated = (updatedUser: any) => {
+      setUserData(updatedUser);
+    };
+
+    // Listen for the userUpdated event and update the state
+    emitter.on('userUpdated', handleUserUpdated);
+
+    setUserData(userContext.userData);
+    setIsLoading(false);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      emitter.off('userUpdated', handleUserUpdated);
+    };
   }, []);
 
   const getUserResume = async () => {
@@ -141,7 +156,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   };
   return (
     <SafeAreaView className=" h-screen w-screen pb-12">
-      <ScrollView className="flex flex-col" refreshControl={
+      {!isLoading && <ScrollView className="flex flex-col" refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         {/* Cover & Profile Picture */}
@@ -160,21 +175,39 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
             </Text>
             <View className='flex flex-row justify-around'>
             <View className="w-[15%] flex items-center">
+            <TouchableOpacity className='w-[100%]'
+                  hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                  onPress={() => {
+                    console.log('upload pressed');
+                    navigation.navigate('UserExperienceUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
+                  }}>
               <Image
                 className="h-[25px] w-[25px]  "
                 source={require('../assets/plus.png')}
               />
+            </TouchableOpacity>
             </View>
-            {userData?.UserExperience && userData?.UserExperience.length > 0 && <View className="w-[15%]  flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/edit.png')}
-              />
+            {userData?.UserExperience && userData?.UserExperience.length > 0 &&
+            <View className="w-[15%]  flex items-center">
+              <TouchableOpacity className='w-[100%]'
+                hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                onPress={() => {
+                  console.log('upload pressed');
+                  navigation.navigate('CommonUserUpdateScreen', {
+                    type: USERUPDATE.TYPE_EXPERIENCE,
+                    data: userData?.UserExperience
+                  }); // send params
+                }}>
+                <Image
+                  className="h-[25px] w-[25px]  "
+                  source={require('../assets/edit.png')}
+                />
+              </TouchableOpacity>
             </View>}
             </View>
           </View>
           {userData?.UserExperience.map(item => (
-            <Experience key={item.ID} data={item} />
+            <ExperienceTab key={item.ID} data={item} />
           ))}
         </View>
 
@@ -188,23 +221,41 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
               Education
             </Text>
             <View className='flex flex-row justify-around'>
-            <View className="w-[15%] flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/plus.png')}
-              />
+              <View className="w-[15%] flex items-center">
+                <TouchableOpacity className='w-[100%]'
+                  hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                  onPress={() => {
+                    console.log('upload pressed');
+                    navigation.navigate('UserEducationUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
+                  }}>
+                  <Image
+                    className="h-[25px] w-[25px]  "
+                    source={require('../assets/plus.png')}
+                  />
+                </TouchableOpacity>
             </View>
-            {userData?.UserEducation && userData?.UserEducation.length > 0 && <View className="w-[15%]  flex items-center">
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/edit.png')}
-              />
-            </View>}
+            {userData?.UserEducation && userData?.UserEducation.length > 0 &&
+              <View className="w-[15%]  flex items-center">
+                <TouchableOpacity
+                  hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                  onPress={() => {
+                    console.log('upload pressed');
+                    navigation.navigate('CommonUserUpdateScreen', {
+                      type: USERUPDATE.TYPE_EDUCATION,
+                      data: userData?.UserEducation
+                    }); // send params
+                  }}>
+                  <Image
+                    className="h-[25px] w-[25px]  "
+                    source={require('../assets/edit.png')}
+                  />
+                </TouchableOpacity>
+              </View>}
             </View>
           </View>
           {userData?.UserEducation.map((item) => (
             <EducationTab
-              key={item.user_id}
+              key={item?.ID}
               data={item}
             />
           ))}
@@ -266,7 +317,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
 
         {/* Line */}
         <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
-      </ScrollView>
+      </ScrollView>}
 
     </SafeAreaView>
   );

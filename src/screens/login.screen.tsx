@@ -60,6 +60,8 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
       values.email = '';
       values.password = '';
       Toast.show({
+        autoHide: true,
+        visibilityTime: 2000,
         type: 'error',
         text1: ToastMessageConstants.LOGIN.ERROR,
         text2: ToastMessageConstants.UNAUTHORIZED
@@ -73,6 +75,8 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
       userContext.SaveUserInContext(response?.user);
       authContext.dispatch({ type: 'SIGNED_IN', accessToken });
       Toast.show({
+        autoHide: true,
+        visibilityTime: 800,
         type: 'success',
         text2: ToastMessageConstants.LOGIN.SUCCESS
       });

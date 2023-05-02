@@ -9,3 +9,10 @@ export enum OTP {
   TYPE_FORGOT_PASSWORD = 'FORGOT_PASSWORD',
   DESCRIPTION_FORGOT_PASSWORD = "You'll receive a 6-digit OTP via email to reset your password",
 }
+
+export enum USERUPDATE {
+  TYPE_EDUCATION = 'EDUCATION',
+  TYPE_UPDATE = 'UPDATE',
+  TYPE_CREATE = 'CREATE',
+  TYPE_EXPERIENCE = 'EXPERIENCE'
+}

@@ -8,7 +8,7 @@ export default function ProfileHeader ({ data, handleChoosePhoto }: any) {
       <View className="w-full bg-[#dbd9d9]  flex flex-row items-center justify-center">
         <View className="translate-y-20 w-[25%] pl-2">
           <Image
-            className="h-[150px] w-[150px] rounded-full"
+            className="h-[130px] w-[130px] rounded-full"
             source={(data?.profile_image_url) ? { uri: data?.profile_image_url } : require('../assets/profile.png')}
           />
         </View>
@@ -60,7 +60,7 @@ export default function ProfileHeader ({ data, handleChoosePhoto }: any) {
             {data?.headline}
           </Text>
             { data?.city !== '' && data?.country !== '' && <Text className="text-black text-[16px] font-medium">
-              {data?.city} , {data?.city}
+              {data?.city} , {data?.country}
               </Text>}
         </View>
       </View>

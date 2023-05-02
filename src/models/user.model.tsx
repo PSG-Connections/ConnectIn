@@ -16,6 +16,7 @@ export interface User {
 }
 
 export interface UserEducation {
+  ID: number
   user_id: number
   school: string
   degree: string
@@ -41,8 +42,8 @@ export interface UserExperience {
   user_id: number
   title: string
   company: string
-  start_date: string
-  end_date: string
+  start_date: Time
+  end_date: Time
   currently_working: boolean
   employement_type: string
 }
@@ -56,4 +57,9 @@ export interface UserProfileProps {
   headline: string
   profile_image_url: string
   cover_image_url: string
+}
+
+export interface Time {
+  Time: string
+  Valid: boolean
 }

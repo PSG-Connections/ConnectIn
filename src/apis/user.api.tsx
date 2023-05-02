@@ -153,3 +153,73 @@ export async function UploadResumeToCloud ({ presignedUrl, Fileuri }: any) {
       console.log(error);
     });
 }
+
+export async function UpdateUserDetails ({ accessToken, newUser }: any) {
+  const axiosOptions = {
+    url: '/api/user/update',
+    method: 'PUT',
+    data: newUser,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function UpdateUserEducation ({ accessToken, newUserEducation }: any) {
+  const axiosOptions = {
+    url: '/api/user/education',
+    method: 'PUT',
+    data: newUserEducation,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function AddUserEducation ({ accessToken, newUserEducation }: any) {
+  const axiosOptions = {
+    url: '/api/user/education',
+    method: 'POST',
+    data: newUserEducation,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function UpdateUserExperience ({ accessToken, newUserExperience }: any) {
+  const axiosOptions = {
+    url: '/api/user/experience',
+    method: 'PUT',
+    data: newUserExperience,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function AddUserExperience ({ accessToken, newUserExperience }: any) {
+  const axiosOptions = {
+    url: '/api/user/experience',
+    method: 'POST',
+    data: newUserExperience,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
