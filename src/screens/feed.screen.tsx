@@ -7,6 +7,7 @@ import { View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, Dimensio
 import { UserContext } from '../contexts/user.context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modal';
 import { clearEncryptedItemByKey } from '../helpers/utils';
 import { AuthContext } from '../contexts/auth.context';
@@ -31,7 +32,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
   };
   return (
     <SafeAreaView className='h-screen'>
-      <View className='h-[7%] bg-red-100 fixed flex flex-row justify-between'>
+      <View className='h-[7%] bg-slate-600 fixed flex flex-row justify-between'>
         <TouchableOpacity className='flex justify-center ml-[4%]' onPress={() => { setModalVisible(true); }}>
         <Image
               className="h-[40px] w-[40px] rounded-full"
@@ -39,7 +40,12 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
             />
         </TouchableOpacity>
         <View className='flex justify-center mr-[4%]'>
-          <Text className='text-black text-xl'>Connect-In</Text>
+          <Text className='text-white text-xl'>Connect-In</Text>
+        </View>
+        <View className='flex flex-row justify-center mr-[4%] items-center'>
+          <TouchableOpacity>
+            <MaterialCommunityIcons name='message-flash' color='white' size={23}></MaterialCommunityIcons>
+          </TouchableOpacity>
         </View>
       </View>
       <Modal
@@ -95,15 +101,17 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
                 <View className='border-solid border-t-2 border-slate-300'></View>
 
               </View>
-              <View className="bg-red-600 flex items-center h-[40px] justify-center rounded-full absolute bottom-2 w-[95%] mx-2">
+              <View className="flex h-[40px] absolute bottom-2 w-[95%] mx-2">
                 <TouchableOpacity
                   onPress={() => {
                     void (async () => {
                       await handleOnPressLogOut();
                     })();
                   }}
-                  className='flex items-center justify-center'>
-                  <Text className="font-bold text-white flex">Log Out</Text>
+                  className='flex items-center justify-center w-full'>
+                    <View className="bg-red-500 flex items-center h-[40px] w-full justify-center rounded-full">
+                      <Text className="font-bold text-white flex">Log Out</Text>
+                    </View>
                 </TouchableOpacity>
               </View>
             </View>
@@ -113,8 +121,8 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
         </View>
       </Modal>
       <ScrollView>
-        <View className="h-screen bg-red-100 items-center justify-center pb-10">
-          <Text className="text-black">Feed here ...............</Text>
+        <View className="h-screen bg-slate-600 items-center justify-center pb-10">
+          <Text className="text-white">Feed here ...............</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

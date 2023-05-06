@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   RefreshControl,
-  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity, Button
+  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity
 } from 'react-native';
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { User } from '../models/user.model';
@@ -306,18 +306,18 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
             </View>
           </View>
           <View className='flex mt-5 justify-center pr-2'>
-            <View className='flex  h-10  bg-blue-400 items-center'>
             <TouchableOpacity onPress={() => {
               console.log('View resume pressed');
               void (async () => {
                 await Linking.openURL(userResumeUrl);
               })();
             }}>
-              <View className='w-[100%] h-[100%] flex justify-center'>
-                <Text className='text-black'>View Resume</Text>
+            <View className='flex  h-10 border-2 rounded-3xl border-blue-400 items-center'>
+              <View className='w-[100%] h-[100%] flex justify-center items-center'>
+                <Text className='text-blue-400'>View Resume</Text>
               </View>
-            </TouchableOpacity>
             </View>
+            </TouchableOpacity>
           </View>
         </View>
 

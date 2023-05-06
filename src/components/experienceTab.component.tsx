@@ -18,7 +18,7 @@ export default function ExperienceTab (props: any) {
         <View className="flex flex-row   gap-3">
           <Image
             className="h-[45px] w-[50px]  "
-            source={require('../assets/experience-replace.png')}
+            source={require('../assets/experience-replace.jpg')}
           />
           <View className="flex flex-col pl-2 text-black">
             <Text className="text-black text-[13px] font-black ">

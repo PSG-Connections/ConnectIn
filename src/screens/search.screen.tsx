@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
-  Text,
   TextInput,
   TouchableOpacity,
   View
@@ -20,7 +19,6 @@ export default function Search ({ navigation, route }: NavProps): JSX.Element {
   const [limit] = useState(5);
   const [offset] = useState(0);
   const [searchResults, setsearchResults] = useState<[]>();
-  const [showSearchAll, setshowSearchAll] = useState(false);
   const handleOnSubmit = async (values: any) => {
     const accessToken = authContext.state.userToken;
     const reqData = {
@@ -33,39 +31,30 @@ export default function Search ({ navigation, route }: NavProps): JSX.Element {
     if (response?.error) {
       // handle error
     }
-    if (limit === -1) {
-      setshowSearchAll(false);
-    } else {
-      setshowSearchAll(true);
-    }
-    console.log(response?.user);
-    if (response?.user.length === 0 || response?.user.length < limit) {
-      setshowSearchAll(false);
-    }
     setsearchResults(response?.user);
   };
   return (
-    <SafeAreaView className=" h-screen w-screen">
-      <ScrollView className="flex flex-col">
-        <View className="flex items-center mt-12">
+    <SafeAreaView className=" h-screen w-screen bg-slate-600">
+      <View className="flex items-center mt-3 fixed">
           <Formik initialValues={{ search: '' }} onSubmit={handleOnSubmit}>
             {({ handleChange, handleSubmit, values }) => (
-              <View className="w-[90%] flex flex-row gap-5 items-center justify-center">
+              <View className="w-[100%] flex flex-row items-center justify-center">
                 <TextInput
-                  className="bg-[#6DB9FF] w-full rounded-full pl-4 text-black font-black text-[24px]  "
+                  className="w-[98%] rounded-xl pl-4 text-slate-300 font-black text-[18px]  "
                   placeholder="Search"
                   keyboardType="web-search"
                   returnKeyType="search"
                   onSubmitEditing={() => handleSubmit()}
                   onChangeText={handleChange('search')}
                   value={values.search}
-                  placeholderTextColor={'black'}
+                  placeholderTextColor={'white'}
                 />
               </View>
             )}
           </Formik>
         </View>
-        <View className="flex flex-col items-center justify-center pt-12">
+      <ScrollView className="flex flex-col">
+        <View className="flex flex-col items-center justify-center pt-3">
           {searchResults?.map((item: any, index: any) => (
             <View key={index} className='flex w-full] items-center'>
             <TouchableOpacity onPress={() => {
@@ -75,26 +64,7 @@ export default function Search ({ navigation, route }: NavProps): JSX.Element {
               </TouchableOpacity>
               </View>
           ))}
-          {/* <Usersearchresult/>
-          <Usersearchresult/>
-          <Usersearchresult/> */}
         </View>
-        {showSearchAll && (
-          <View className="">
-            <View className="flex items-center pt-10 pb-5">
-              <TouchableOpacity
-                // onPress={() => {
-                //   handleOnShowAllResults();
-                // }}
-                className="">
-                <Text className=" text-[#1079D9] text-[14px] font-black">
-                  See all results
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View className="w-full h-2 bg-[#6DB9FF]"></View>
-          </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );

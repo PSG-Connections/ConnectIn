@@ -17,18 +17,20 @@ const homeNavigation = createBottomTabNavigator();
 
 export default function HomeNavigation (): JSX.Element {
   return (
-    <homeNavigation.Navigator screenOptions={
-      {
-        headerShown: false,
-        tabBarShowLabel: false
-      }}>
+    <homeNavigation.Navigator screenOptions={({ route }) => ({
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarStyle: { backgroundColor: '#475569' }
+    }
+    )}>
       <homeNavigation.Screen name="Feed" component={FeedNavigation} options={{
         tabBarIcon: ({ focused, color, size }) => (
-          <MaterialCommunityIcons name='home-circle' color='black' size={35} style={focused
+          <MaterialCommunityIcons name='home-circle' color='#CBD5E1' size={35} style={focused
             ? {
-                borderTopColor: 'black',
+                borderTopColor: 'white',
                 borderTopWidth: 2,
-                paddingTop: 5
+                paddingTop: 5,
+                color: 'white'
               }
             : {}}/>
         ),
@@ -36,11 +38,12 @@ export default function HomeNavigation (): JSX.Element {
       }}/>
       <homeNavigation.Screen name="Search" component={SearchNavigation} options={{
         tabBarIcon: ({ focused, color, size }) => (
-          <Ionicons name='search-circle' color={'black'} size={35} style={focused
+          <Ionicons name='search-circle' color={'#CBD5E1'} size={35} style={focused
             ? {
-                borderTopColor: 'black',
+                borderTopColor: 'white',
                 borderTopWidth: 2,
-                paddingTop: 2
+                paddingTop: 2,
+                color: 'white'
               }
             : {}}/>
         )
@@ -48,11 +51,12 @@ export default function HomeNavigation (): JSX.Element {
       <homeNavigation.Screen name="Post" component={PostNavigation} options={{
         tabBarStyle: { display: 'none' },
         tabBarIcon: ({ focused, color, size }) => (
-          <MaterialIcons name='add-box' color='black' size={35} style={focused
+          <MaterialIcons name='add-box' color='#CBD5E1' size={35} style={focused
             ? {
-                borderTopColor: 'black',
+                borderTopColor: 'white',
                 borderTopWidth: 2,
-                paddingTop: 5
+                paddingTop: 5,
+                color: 'white'
               }
             : {}}/>
         )
@@ -62,11 +66,12 @@ export default function HomeNavigation (): JSX.Element {
         component={NotificationNavigation}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name='bell-circle' color='black' size={35} style={focused
+            <MaterialCommunityIcons name='bell-circle' color='#CBD5E1' size={35} style={focused
               ? {
-                  borderTopColor: 'black',
+                  borderTopColor: 'white',
                   borderTopWidth: 2,
-                  paddingTop: 5
+                  paddingTop: 5,
+                  color: 'white'
                 }
               : {}}/>
           )
@@ -75,11 +80,12 @@ export default function HomeNavigation (): JSX.Element {
 
       <homeNavigation.Screen name="Profile" component={ProfileNavigation} options={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => (
-          <Ionicons name='person-circle' color='black' size={35} style={focused
+          <Ionicons name='person-circle' color='#CBD5E1' size={35} style={focused
             ? {
-                borderTopColor: 'black',
+                borderTopColor: 'white',
                 borderTopWidth: 2,
-                paddingTop: 5
+                paddingTop: 5,
+                color: 'white'
               }
             : {}}/>
         ),
@@ -88,6 +94,10 @@ export default function HomeNavigation (): JSX.Element {
           if (routeName === 'UserUpdateScreen' || routeName === 'UserEducationUpdateScreen' ||
             routeName === 'CommonUserUpdateScreen' || routeName === 'UserExperienceUpdateScreen') {
             return { display: 'none' };
+          } else {
+            return {
+              backgroundColor: '#475569'
+            };
           }
         })(route)
       })}/>

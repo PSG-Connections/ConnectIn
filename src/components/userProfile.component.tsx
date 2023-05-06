@@ -147,18 +147,18 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
               </Text>
             </View>
             <View className='flex mt-5 justify-center pr-2'>
-              <View className='flex  h-10  bg-blue-400 items-center'>
               <TouchableOpacity onPress={() => {
                 console.log('View resume pressed');
                 void (async () => {
                   await Linking.openURL(userData?.resume_url as string);
                 })();
               }}>
-                <View className='w-[100%] h-[100%] flex justify-center'>
-                  <Text className='text-black'>View Resume</Text>
+              <View className='flex  h-10 border-2 rounded-3xl border-blue-400 items-center'>
+                <View className='w-[100%] h-[100%] flex justify-center items-center'>
+                  <Text className='text-blue-400'>View Resume</Text>
                 </View>
-              </TouchableOpacity>
               </View>
+              </TouchableOpacity>
             </View>
           </View>
 
