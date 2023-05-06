@@ -46,6 +46,7 @@ export default function HomeNavigation (): JSX.Element {
         )
       }}/>
       <homeNavigation.Screen name="Post" component={PostNavigation} options={{
+        tabBarStyle: { display: 'none' },
         tabBarIcon: ({ focused, color, size }) => (
           <MaterialIcons name='add-box' color='black' size={35} style={focused
             ? {

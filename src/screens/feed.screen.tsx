@@ -6,6 +6,7 @@ import { View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, Dimensio
 // import { ScrollView } from 'react-native-gesture-handler';
 import { UserContext } from '../contexts/user.context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import { clearEncryptedItemByKey } from '../helpers/utils';
 import { AuthContext } from '../contexts/auth.context';
@@ -21,6 +22,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
     try {
       console.log('logout clearing session');
       // need to clear usercontext, authcontext
+      userContext.ClearUserInContext();
       await clearEncryptedItemByKey('user_session');
     } catch (error) {
       console.log(error);
@@ -77,7 +79,21 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
                     <Text className='text-slate-500'>View Profile</Text>
                   </TouchableOpacity>
                 </View>
+
+                {/* line */}
+                <View className='border-solid border-t-2 border-slate-300  -translate-y-5'></View>
+
+                {/* settings button */}
+                <View className='flex items-center mb-4'>
+                    <TouchableOpacity className='flex flex-row items-center w-[50%] '>
+                    <Ionicons name='settings' color='#0F172A' size={25}></Ionicons>
+                      <Text className='text-slate-700 text-lg ml-3'>Settings</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* line */}
                 <View className='border-solid border-t-2 border-slate-300'></View>
+
               </View>
               <View className="bg-red-600 flex items-center h-[40px] justify-center rounded-full absolute bottom-2 w-[95%] mx-2">
                 <TouchableOpacity

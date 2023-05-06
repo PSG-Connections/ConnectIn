@@ -20,6 +20,9 @@ export default function UserEducationUpdateScreen ({ navigation, route }: NavPro
   const routeData = route.params;
   const [startDate, setStartDate] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE ? new Date(routeData?.data?.start_date) : (new Date()));
   const [endDate, setEndDate] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE ? new Date(routeData?.data?.end_date) : (new Date()));
+  const [endDateModified, setEndDateModified] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE);
+  const [startDateModified, setStartDateModified] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE);
+  const [endDateDisabled, setEndDateDisabled] = useState(true);
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const initialUserDetails = {
@@ -132,7 +135,7 @@ export default function UserEducationUpdateScreen ({ navigation, route }: NavPro
                         className="text-white"
                         style={searchStyle.searchInput}
                         underlineColorAndroid="white"
-                        value={startDate.toLocaleDateString()}
+                        value={startDateModified ? startDate.toLocaleDateString() : 'Start Date'}
                         editable={false}
                     />
                   </TouchableOpacity>
@@ -144,6 +147,8 @@ export default function UserEducationUpdateScreen ({ navigation, route }: NavPro
                         maximumDate={new Date()}
                         onConfirm={(date) => {
                           setStartDate(date);
+                          setStartDateModified(true);
+                          setEndDateDisabled(false);
                           setShowStartDatePicker(false);
                         }}
                         onCancel={() => {
@@ -155,14 +160,16 @@ export default function UserEducationUpdateScreen ({ navigation, route }: NavPro
                 </View>
                 <View className="mt-5">
                   <Text className="text-white">End date</Text>
-                  <TouchableOpacity onPress={() => {
-                    setShowEndDatePicker(true);
-                  }}>
+                  <TouchableOpacity
+                    disabled={endDateDisabled}
+                    onPress={() => {
+                      setShowEndDatePicker(true);
+                    }}>
                     <TextInput
                         className="text-white"
                         style={searchStyle.searchInput}
                         underlineColorAndroid="white"
-                        value={endDate.toLocaleDateString()}
+                        value={endDateModified ? endDate.toLocaleDateString() : 'End Date'}
                         editable={false}
                     />
                   </TouchableOpacity>
@@ -171,9 +178,11 @@ export default function UserEducationUpdateScreen ({ navigation, route }: NavPro
                         modal={true}
                         open={true}
                         date={endDate}
+                        minimumDate={startDate}
                         maximumDate={new Date()}
                         onConfirm={(date) => {
                           setEndDate(date);
+                          setEndDateModified(true);
                           setShowEndDatePicker(false);
                         }}
                         onCancel={() => {

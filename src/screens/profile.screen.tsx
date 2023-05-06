@@ -7,7 +7,7 @@ import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { User } from '../models/user.model';
 import { UserContext } from '../contexts/user.context';
 import { AuthContext } from '../contexts/auth.context';
-import { GetLoggedInUserAPI, GetLoggedInUserResumeUrl, GetUserResumeUploadUrl, UploadAvatarAPI, UploadResumeToCloud } from '../apis/user.api';
+import { GetLoggedInUserAPI, GetUserResumeUploadUrl, UploadAvatarAPI, UploadResumeToCloud } from '../apis/user.api';
 import EducationTab from '../components/educationTab.component';
 import ExperienceTab from '../components/experienceTab.component';
 import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
@@ -25,7 +25,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   const userContext = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
   const [userData, setUserData] = useState<User>();
-  const [userResumeUrl, setUserResumeUrl] = useState<string>();
+  const [userResumeUrl, setUserResumeUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // useFocusEffect(() => {
   //   console.log('screen - profile focussed');
@@ -65,21 +65,22 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   }, []);
 
   const getUserResume = async () => {
-    const accessToken = authContext.state.userToken;
-    const resumeUrlResponse = await GetLoggedInUserResumeUrl({ accessToken });
-    console.log('resume url--->', resumeUrlResponse);
+    console.log('resume url--->', userData?.resume_url);
     // handle errors
-    const encodedUrl = encodeURIComponent(resumeUrlResponse?.url);
+    const encodedUrl = encodeURIComponent(userData?.resume_url as string);
     const resumeUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodedUrl}`;
     setUserResumeUrl(resumeUrl);
   };
   const getLoggedInUser = async () => {
     console.log('in function --> getLoggedInUser');
     const accessToken = authContext.state.userToken;
-    // await getUserResume();
+    await getUserResume();
     const resp = await GetLoggedInUserAPI({ accessToken });
     // handle errors
     return resp;
+  };
+  const handleUserEditButtonClick = async () => {
+    navigation.navigate('UserUpdateScreen', userData);
   };
   const handleChoosePhoto = async () => {
     await launchImageLibrary({ mediaType: 'photo' }, async (response: ImagePickerResponse) => {
@@ -159,11 +160,14 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
       {!isLoading && <ScrollView className="flex flex-col" refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
+
         {/* Cover & Profile Picture */}
-        <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto}/>
-        <Button title='Update data' onPress={() => {
+        <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto} loggedInUser={true} handleUserEditButtonClick={handleUserEditButtonClick}/>
+
+        {/* <Button title='Update data' onPress={() => {
           navigation.navigate('UserUpdateScreen', userData);
-        }}></Button>
+        }}></Button> */}
+
         {/* Line */}
         <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
 
@@ -206,7 +210,8 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
             </View>}
             </View>
           </View>
-          {userData?.UserExperience.map(item => (
+          {userData?.UserExperience && userData?.UserExperience.length > 0 &&
+          userData?.UserExperience.map(item => (
             <ExperienceTab key={item.ID} data={item} />
           ))}
         </View>
@@ -253,7 +258,8 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
               </View>}
             </View>
           </View>
-          {userData?.UserEducation.map((item) => (
+          {userData?.UserEducation && userData?.UserEducation.length > 0 &&
+          userData?.UserEducation.map((item) => (
             <EducationTab
               key={item?.ID}
               data={item}
@@ -304,7 +310,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
             <TouchableOpacity onPress={() => {
               console.log('View resume pressed');
               void (async () => {
-                await Linking.openURL(userResumeUrl as string);
+                await Linking.openURL(userResumeUrl);
               })();
             }}>
               <View className='w-[100%] h-[100%] flex justify-center'>

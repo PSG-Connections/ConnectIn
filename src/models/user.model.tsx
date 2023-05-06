@@ -3,6 +3,7 @@ export interface User {
   last_name: string
   email: string
   profile_image_url: string
+  resume_url: string
   password: string
   phone_number: string
   verified: boolean

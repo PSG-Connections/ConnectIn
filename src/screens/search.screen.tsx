@@ -1,21 +1,21 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
-import {AuthContext} from '../contexts/auth.context';
-import {Formik} from 'formik';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {SearchUser} from '../apis/user.api';
+import { AuthContext } from '../contexts/auth.context';
+import { Formik } from 'formik';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { SearchUser } from '../apis/user.api';
 import Usersearchresult from '../components/userSearchResult.component';
 
 type NavProps = NativeStackScreenProps<any>;
-export default function Search({navigation, route}: NavProps): JSX.Element {
+export default function Search ({ navigation, route }: NavProps): JSX.Element {
   const authContext = useContext(AuthContext);
   const [limit] = useState(5);
   const [offset] = useState(0);
@@ -27,7 +27,7 @@ export default function Search({navigation, route}: NavProps): JSX.Element {
       searchValue: values?.search,
       accessToken,
       offset,
-      limit,
+      limit
     };
     const response = await SearchUser(reqData);
     if (response?.error) {
@@ -48,8 +48,8 @@ export default function Search({navigation, route}: NavProps): JSX.Element {
     <SafeAreaView className=" h-screen w-screen">
       <ScrollView className="flex flex-col">
         <View className="flex items-center mt-12">
-          <Formik initialValues={{search: ''}} onSubmit={handleOnSubmit}>
-            {({handleChange, handleSubmit, values}) => (
+          <Formik initialValues={{ search: '' }} onSubmit={handleOnSubmit}>
+            {({ handleChange, handleSubmit, values }) => (
               <View className="w-[90%] flex flex-row gap-5 items-center justify-center">
                 <TextInput
                   className="bg-[#6DB9FF] w-full rounded-full pl-4 text-black font-black text-[24px]  "
@@ -66,8 +66,14 @@ export default function Search({navigation, route}: NavProps): JSX.Element {
           </Formik>
         </View>
         <View className="flex flex-col items-center justify-center pt-12">
-          {searchResults?.map((item: any) => (
-            <Usersearchresult key={item?.email} data={item} />
+          {searchResults?.map((item: any, index: any) => (
+            <View key={index} className='flex w-full] items-center'>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('UserProfileComponent', { email: item?.email });
+            }}>
+                <Usersearchresult data={item} />
+              </TouchableOpacity>
+              </View>
           ))}
           {/* <Usersearchresult/>
           <Usersearchresult/>

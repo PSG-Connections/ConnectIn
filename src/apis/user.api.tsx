@@ -223,3 +223,16 @@ export async function AddUserExperience ({ accessToken, newUserExperience }: any
   const response = await HttpRequest(mergedConfig);
   return response;
 }
+
+export async function GetSearchUserByEmail ({ accessToken, email }: any) {
+  const axiosOptions = {
+    url: '/api/user/search/'.concat(email),
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}

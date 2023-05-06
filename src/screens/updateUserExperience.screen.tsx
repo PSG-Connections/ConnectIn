@@ -22,6 +22,9 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
   const routeData = route.params;
   const [startDate, setStartDate] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE ? new Date(routeData?.data?.start_date?.Time) : (new Date()));
   const [endDate, setEndDate] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE ? new Date(routeData?.data?.end_date?.Time) : (new Date()));
+  const [endDateModified, setEndDateModified] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE ? new Date(routeData?.data?.start_date?.Valid) : false);
+  const [startDateModified, setStartDateModified] = useState(routeData?.type === USERUPDATE.TYPE_UPDATE ? new Date(routeData?.data?.end_date?.Valid) : false);
+  const [endDateDisabled, setEndDateDisabled] = useState(true);
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const initialUserDetails = {
@@ -29,11 +32,10 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
     title: routeData?.data?.title,
     company: routeData?.data?.company,
     currentlyWorking: routeData?.data?.currently_working,
-    employementType: routeData?.data?.employement_type,
+    employementType: routeData?.data?.employement_type || 'FULL-TIME',
     startDate,
     endDate
   };
-  console.log('initial values on component ->', initialUserDetails);
   const handleUpdateUserExperience = async (values: any) => {
     console.log('form submit values', values);
     console.log('form submit start date', startDate);
@@ -47,7 +49,7 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
       currently_working: values.currentlyWorking,
       employement_type: values.employementType,
       start_date: { Time: startDate.toISOString(), Valid: true },
-      end_date: { Time: endDate.toISOString(), Valid: true }
+      end_date: { Time: endDate.toISOString(), Valid: !!endDateModified }
     };
     if (routeData?.type === USERUPDATE.TYPE_UPDATE) {
       console.log('Update req =>', newUserExperience);
@@ -115,7 +117,7 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
                         className="text-white"
                         style={searchStyle.searchInput}
                         underlineColorAndroid="white"
-                        value={startDate.toLocaleDateString()}
+                        value={startDateModified ? startDate.toLocaleDateString() : 'Start Date'}
                         editable={false}
                     />
                   </TouchableOpacity>
@@ -127,6 +129,8 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
                         maximumDate={new Date()}
                         onConfirm={(date) => {
                           setStartDate(date);
+                          setStartDateModified(true);
+                          setEndDateDisabled(false);
                           setShowStartDatePicker(false);
                         }}
                         onCancel={() => {
@@ -138,14 +142,14 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
                 </View>
                 <View className="mt-5">
                   <Text className="text-white">End date</Text>
-                  <TouchableOpacity onPress={() => {
+                  <TouchableOpacity disabled={endDateDisabled} onPress={() => {
                     setShowEndDatePicker(true);
                   }}>
                     <TextInput
                         className="text-white"
                         style={searchStyle.searchInput}
                         underlineColorAndroid="white"
-                        value={endDate.toLocaleDateString()}
+                        value={endDateModified ? endDate.toLocaleDateString() : 'End Date'}
                         editable={false}
                     />
                   </TouchableOpacity>
@@ -154,9 +158,11 @@ export default function UserExperienceUpdateScreen ({ navigation, route }: NavPr
                         modal={true}
                         open={true}
                         date={endDate}
+                        minimumDate={startDate}
                         maximumDate={new Date()}
                         onConfirm={(date) => {
                           setEndDate(date);
+                          setEndDateModified(true);
                           setShowEndDatePicker(false);
                         }}
                         onCancel={() => {
