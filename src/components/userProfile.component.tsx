@@ -13,6 +13,7 @@ import Experience from './experienceTab.component';
 import ProfileHeader from './profileHeader.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { FollowUser, UnFollowUser } from '../apis/connections.api';
 // import { axiosPut } from '../apis';
 
 type NavProps = NativeStackScreenProps<any>;
@@ -22,6 +23,7 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
   const userContext = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
   const [userData, setUserData] = useState<User>();
+  const [following, setFollowing] = useState<boolean>(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -44,6 +46,7 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
 
       // handle errors
       setUserData(resp?.user);
+      setFollowing(resp?.following || false);
     })();
     console.log('user---->>', userData);
   }, []);
@@ -64,6 +67,22 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
     // handle errors
     return resp;
   };
+  const handleFollowButtonClick = async () => {
+    const accessToken = authContext.state.userToken;
+    if (following) {
+      const resp = await UnFollowUser({ accessToken, email: userData?.email });
+      // handle errors
+      if (!resp?.errors) {
+        setFollowing(false);
+      }
+    } else {
+      const resp = await FollowUser({ accessToken, email: userData?.email });
+      // handle errors
+      if (!resp?.errors) {
+        setFollowing(true);
+      }
+    }
+  };
   return (
       <SafeAreaView className=" h-screen w-screen pb-12">
         <ScrollView className="flex flex-col" refreshControl={
@@ -78,9 +97,17 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
           {/* follow */}
           <View className='flex flex-row w-full my-3 pr-2'>
             <View className='flex w-[45%] items-center h-[33px]'>
-              <TouchableOpacity className=' flex w-[95%] bg-blue-600 flex-row justify-center h-full items-center rounded-3xl'>
-              <MaterialCommunityIcons name='plus' color='white' size={18}></MaterialCommunityIcons>
-                <Text className='ml-1 text-md text-white'>Follow</Text>
+              <TouchableOpacity className={`flex w-[95%] ${following ? 'bg-slate-400' : 'bg-blue-600'} flex-row justify-center h-full items-center rounded-3xl`}
+              onPress={() => {
+                void (async () => {
+                  await handleFollowButtonClick();
+                })();
+              }}
+              >
+                {following
+                  ? <MaterialCommunityIcons name='handshake' color='white' size={18}></MaterialCommunityIcons>
+                  : <MaterialCommunityIcons name='plus' color='white' size={18}></MaterialCommunityIcons>}
+                <Text className={`ml-1 text-md ${following ? 'text-slate-100' : 'text-white'}`}>{following ? 'Follow' : 'Following'}</Text>
               </TouchableOpacity>
             </View>
             <View className='flex w-[45%] items-center h-[33px]'>

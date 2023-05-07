@@ -51,15 +51,15 @@ export default function PostScreen ({ navigation }: any): JSX.Element {
                     />
               </View>
               <View className='flex flex-col ml-5 justify-around'>
-                <Text>{userContext.userData?.first_name} {userContext.userData?.last_name}</Text>
+                <Text className='text-white'>{userContext.userData?.first_name} {userContext.userData?.last_name}</Text>
                 <View className='border-solid border-slate-300 border-2 rounded-xl px-2 flex flex-row'>
-                  <Text className='mr-2'>{postViewType}</Text>
+                  <Text className='mr-2 text-white'>{postViewType}</Text>
                   <Ionicons name='ios-caret-down' color='white' size={20}></Ionicons>
                 </View>
               </View>
           </View>
           <View>
-            <TextInput className=''
+            <TextInput className='text-white'
               multiline={true}
               value={postTextContent}
               onChangeText={(value) => {
@@ -72,6 +72,7 @@ export default function PostScreen ({ navigation }: any): JSX.Element {
                 }
               }}
               placeholder='What do you want to talk about?'
+              placeholderTextColor={'#ffffff'}
               underlineColorAndroid='transparent'
             />
           </View>
@@ -108,7 +109,7 @@ export default function PostScreen ({ navigation }: any): JSX.Element {
                 setPostCommentsType(!postCommentsType);
               }}>
                 <MaterialCommunityIcons name={`${postCommentsType ? 'comment-outline' : 'comment-off-outline'}`} color='white' size={17}></MaterialCommunityIcons>
-                <Text className='ml-1 text-[15px]'>
+                <Text className='ml-1 text-[15px] text-white'>
                   {postCommentsType ? 'Comments' : 'No one'}
                 </Text>
               </TouchableOpacity>
