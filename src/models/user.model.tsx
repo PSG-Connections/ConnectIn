@@ -64,3 +64,14 @@ export interface Time {
   Time: string
   Valid: boolean
 }
+
+export interface UserSearchResult {
+  ID: number
+  first_name: string
+  last_name: string
+  neo_id: number
+  email: string
+  profile_image_url: string
+  headline: string
+  following: boolean
+}

@@ -23,12 +23,13 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
     try {
       console.log('logout clearing session');
       // need to clear usercontext, authcontext
+      authContext.dispatch({ type: 'SIGNED_OUT' });
       userContext.ClearUserInContext();
       await clearEncryptedItemByKey('user_session');
     } catch (error) {
       console.log(error);
     }
-    authContext.dispatch({ type: 'SIGNED_OUT' });
+    // authContext.dispatch({ type: 'SIGNED_OUT' });
   };
   return (
     <SafeAreaView className='h-screen'>

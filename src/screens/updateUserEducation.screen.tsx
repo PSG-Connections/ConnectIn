@@ -119,6 +119,7 @@ export default function UserEducationUpdateScreen ({ navigation, route }: NavPro
                   <Text className="text-white">Grade</Text>
                   <TextInput
                     className="text-white"
+                    keyboardType="numeric"
                     style={searchStyle.searchInput}
                     underlineColorAndroid="white"
                     onChangeText={handleChange('grade')}

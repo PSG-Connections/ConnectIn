@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getEncryptedItemByKey } from '../helpers/utils';
 import { profileServerURL } from '../constants/common.constant';
+import RNFetchBlob from 'react-native-blob-util';
 
 export const HttpRequest = async (config: any) => {
   // axios.interceptors.request.use(request => {
@@ -70,3 +71,22 @@ export const axiosPut = async (data: any) => {
     });
   return response;
 };
+
+export async function UploadBlobToCloud ({ presignedUrl, Fileuri, contentType }: any) {
+  const response: any = await RNFetchBlob.fetch(
+    'PUT',
+    presignedUrl,
+    {
+      'Content-Type': contentType
+    },
+    RNFetchBlob.wrap(Fileuri)
+  )
+    .then(res => {
+      console.log('200 resp', res);
+      return response;
+    })
+    .catch(error => {
+      console.log('err--->', error);
+    });
+  return response;
+}

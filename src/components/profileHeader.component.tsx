@@ -68,25 +68,35 @@ export default function ProfileHeader ({ data, handleChoosePhoto, loggedInUser, 
                 <View className='flex h-screen flex-col items-center'>
                   <View className='w-[35%] mt-5 mb-4 border-solid border-t-4 border-slate-600 rounded-full'>
                   </View>
-                  <View className="bg-blue-500 mt-4 flex items-center h-[45px] justify-center rounded-full w-[95%] mx-2">
-                    <TouchableOpacity
-                      onPress={() => {
-                      }}
-                      className='flex items-center justify-center'>
-                      <Text className="font-bold text-white flex">View Photo</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View className="bg-blue-500 flex mt-4 items-center h-[45px] justify-center rounded-full w-[95%] mx-2">
-                    <TouchableOpacity
-                    onPress={() => {
-                      console.log('upload pressed');
-                      void (async () => {
-                        await handleChoosePhoto();
-                      })();
-                    }}
-                      className='flex items-center justify-center'>
-                      <Text className="font-bold text-white flex">Edit Photo</Text>
-                    </TouchableOpacity>
+                  <View className='flex flex-row'>
+                    <View className='flex w-[30%] items-center justify-center'>
+                      <Image
+                        className="h-[100px] w-[100px] rounded-full flex"
+                        source={(data?.profile_image_url) ? { uri: data?.profile_image_url } : require('../assets/profile.png')}
+                      />
+                    </View>
+                    <View className='flex w-[70%]'>
+                      <View className="bg-blue-500 mt-4 flex items-center h-[45px] justify-center rounded-full w-[95%] mx-2">
+                        <TouchableOpacity
+                          onPress={() => {
+                          }}
+                          className='flex items-center justify-center'>
+                          <Text className="font-bold text-white flex">View Photo</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <View className="bg-blue-500 flex mt-4 items-center h-[45px] justify-center rounded-full w-[95%] mx-2">
+                        <TouchableOpacity
+                        onPress={() => {
+                          console.log('upload pressed');
+                          void (async () => {
+                            await handleChoosePhoto();
+                          })();
+                        }}
+                          className='flex items-center justify-center'>
+                          <Text className="font-bold text-white flex">Edit Photo</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                   </View>
                   <View className="bg-red-600 flex mt-4 items-center h-[45px] justify-center rounded-full w-[95%] mx-2">
                     <TouchableOpacity

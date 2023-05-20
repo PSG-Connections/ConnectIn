@@ -1,6 +1,5 @@
 import { profileServerURL } from '../constants/common.constant';
 import { HttpRequest } from './index';
-import RNFetchBlob from 'react-native-blob-util';
 
 const defaultConfig = {
   baseURL: profileServerURL,
@@ -135,23 +134,6 @@ export async function GetLoggedInUserResumeUrl (data: any) {
   const mergedConfig = Object.assign(defaultConfig, axiosOptions);
   const response = await HttpRequest(mergedConfig);
   return response;
-}
-
-export async function UploadResumeToCloud ({ presignedUrl, Fileuri }: any) {
-  RNFetchBlob.fetch(
-    'PUT',
-    presignedUrl,
-    {
-      'Content-Type': 'application/pdf'
-    },
-    RNFetchBlob.wrap(Fileuri)
-  )
-    .then(res => {
-      console.log(res);
-    })
-    .catch(error => {
-      console.log(error);
-    });
 }
 
 export async function UpdateUserDetails ({ accessToken, newUser }: any) {

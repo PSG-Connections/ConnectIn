@@ -92,7 +92,8 @@ export default function HomeNavigation (): JSX.Element {
         tabBarStyle: ((route) => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? '';
           if (routeName === 'UserUpdateScreen' || routeName === 'UserEducationUpdateScreen' ||
-            routeName === 'CommonUserUpdateScreen' || routeName === 'UserExperienceUpdateScreen') {
+            routeName === 'CommonUserUpdateScreen' || routeName === 'UserExperienceUpdateScreen' ||
+            routeName === 'CommentsScreen') {
             return { display: 'none' };
           } else {
             return {

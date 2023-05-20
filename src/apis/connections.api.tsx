@@ -42,3 +42,39 @@ export async function UnFollowUser ({ accessToken, email }: any) {
   const response = await HttpRequest(mergedConfig);
   return response;
 }
+
+export async function GetAllFollowing (data: any) {
+  const params = {
+    offset: data?.offset,
+    limit: data?.limit
+  };
+  const axiosOptions = {
+    url: '/api/user/following',
+    method: 'GET',
+    params,
+    headers: {
+      Authorization: 'Bearer '.concat(data.accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
+export async function GetAllFollowers (data: any) {
+  const params = {
+    offset: data?.offset,
+    limit: data?.limit
+  };
+  const axiosOptions = {
+    url: '/api/user/followers',
+    method: 'GET',
+    params,
+    headers: {
+      Authorization: 'Bearer '.concat(data.accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}

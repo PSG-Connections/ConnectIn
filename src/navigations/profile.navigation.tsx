@@ -5,6 +5,7 @@ import UserUpdateScreen from '../screens/userUpdate.screen';
 import UserEducationUpdateScreen from '../screens/updateUserEducation.screen';
 import CommonUserUpdateScreen from '../screens/commonUpdateScreen';
 import UserExperienceUpdateScreen from '../screens/updateUserExperience.screen';
+import CommentsScreen from '../screens/comments.screen';
 
 const profileNavigation = createNativeStackNavigator();
 
@@ -19,6 +20,13 @@ export default function ProfileNavigation ({ navigation }: any): JSX.Element {
       <profileNavigation.Screen name="UserEducationUpdateScreen" component={UserEducationUpdateScreen}/>
       <profileNavigation.Screen name='UserExperienceUpdateScreen' component={UserExperienceUpdateScreen}/>
       <profileNavigation.Screen name="CommonUserUpdateScreen" component={CommonUserUpdateScreen}/>
+      <profileNavigation.Screen name="CommentsScreen" component={CommentsScreen}
+      options={{
+        animationTypeForReplace: 'push',
+        animation: 'slide_from_bottom',
+        presentation: 'modal'
+      }}
+      />
     </profileNavigation.Navigator>
   );
 }

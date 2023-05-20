@@ -1,13 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   RefreshControl,
-  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity
+  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity, FlatList
 } from 'react-native';
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { User } from '../models/user.model';
 import { UserContext } from '../contexts/user.context';
 import { AuthContext } from '../contexts/auth.context';
-import { GetLoggedInUserAPI, GetUserResumeUploadUrl, UploadAvatarAPI, UploadResumeToCloud } from '../apis/user.api';
+import { GetLoggedInUserAPI, GetUserResumeUploadUrl, UploadAvatarAPI } from '../apis/user.api';
 import EducationTab from '../components/educationTab.component';
 import ExperienceTab from '../components/experienceTab.component';
 import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
@@ -16,6 +16,11 @@ import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-pi
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { emitter } from '../constants/events';
 import { USERUPDATE } from '../constants/common.constant';
+import PostContent from '../components/postContent.component';
+import { Post } from '../models/post.model';
+import { GetUserPostsByEmail } from '../apis/post.api';
+import { UploadBlobToCloud } from '../apis';
+
 // import { useFocusEffect } from '@react-navigation/native';
 // import { axiosPut } from '../apis';
 
@@ -27,20 +32,28 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   const [userData, setUserData] = useState<User>();
   const [userResumeUrl, setUserResumeUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [limit] = useState(10);
+  const [offset, setOffset] = useState(0);
+  const [posts, setPosts] = useState<Post[]>([]);
   // useFocusEffect(() => {
   //   console.log('screen - profile focussed');
   //   // do any re-fetching or re-rendering here
   // });
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    setIsLoading(true);
+    setUserData(undefined);
     setTimeout(() => {
       void (async () => {
         const resp = await getLoggedInUser();
         console.log('on refresh resp-->', resp);
         // handle errors
-        userContext.SaveUserInContext(resp?.user);
+
         setUserData(resp?.user);
+        userContext.SaveUserInContext(resp?.user);
+        setOffset(0);
       })();
+      setIsLoading(false);
       setRefreshing(false);
     }, 2000);
   }, []);
@@ -56,6 +69,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
     emitter.on('userUpdated', handleUserUpdated);
 
     setUserData(userContext.userData);
+
     setIsLoading(false);
 
     // Cleanup the event listener when the component unmounts
@@ -64,6 +78,35 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
     };
   }, []);
 
+  useEffect(() => {
+    // fetch user posts
+    void (async () => {
+      await getUserPosts();
+    })();
+  }, [offset]);
+
+  const getUserPosts = async () => {
+    const accessToken = authContext.state.userToken;
+    const requestData = {
+      accessToken,
+      email: userContext.userData?.email,
+      limit,
+      offset
+    };
+    console.log('calling get posts api--->', requestData);
+    const resp = await GetUserPostsByEmail(requestData);
+    console.log('get post api response--->', resp);
+    if (resp?.error) {
+      // handle errors
+    }
+    if (offset === 0) {
+      setPosts(resp?.posts);
+    } else {
+      setPosts((prevState) => {
+        return [...prevState, ...resp?.posts];
+      });
+    }
+  };
   const getUserResume = async () => {
     console.log('resume url--->', userData?.resume_url);
     // handle errors
@@ -82,6 +125,12 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   const handleUserEditButtonClick = async () => {
     navigation.navigate('UserUpdateScreen', userData);
   };
+
+  const handleRemovePost = async (id: number) => {
+    const filteredData = posts.filter(item => item.id !== id);
+    setPosts(filteredData);
+  };
+
   const handleChoosePhoto = async () => {
     await launchImageLibrary({ mediaType: 'photo' }, async (response: ImagePickerResponse) => {
       console.log(response);
@@ -115,6 +164,11 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
       }
     });
   };
+
+  const handlePostEndReached = () => {
+    setOffset((prevState) => (prevState + limit));
+  };
+
   const handleUploadResume = async () => {
     try {
       const files: DocumentPickerResponse[] = await DocumentPicker.pick({
@@ -133,7 +187,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
         name: file?.name,
         type: file?.type
       } as unknown as string);
-      const resumeUploadResponse = UploadResumeToCloud({ presignedUrl, Fileuri });
+      const resumeUploadResponse = UploadBlobToCloud({ presignedUrl, Fileuri, contentType: 'application/pdf' });
       console.log(resumeUploadResponse);
       await getUserResume();
       // handle errors
@@ -157,173 +211,219 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   };
   return (
     <SafeAreaView className=" h-screen w-screen pb-12">
-      {!isLoading && <ScrollView className="flex flex-col" refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+      <View className=''>
+            <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              className=''
+              data={posts}
+              ListHeaderComponent={() => {
+                return (
+                 <>
+                  {!isLoading && <ScrollView className="flex flex-col"
+                    refreshControl={
+                      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
+                  >
 
-        {/* Cover & Profile Picture */}
-        <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto} loggedInUser={true} handleUserEditButtonClick={handleUserEditButtonClick}/>
+                    {/* Cover & Profile Picture */}
+                    <ProfileHeader data={userData} handleChoosePhoto={handleChoosePhoto} loggedInUser={true} handleUserEditButtonClick={handleUserEditButtonClick}/>
 
-        {/* <Button title='Update data' onPress={() => {
-          navigation.navigate('UserUpdateScreen', userData);
-        }}></Button> */}
+                    {/* <Button title='Update data' onPress={() => {
+                      navigation.navigate('UserUpdateScreen', userData);
+                    }}></Button> */}
 
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    {/* Line */}
+                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
 
-        {/* Experience */}
-        <View className="pt-5 pl-2 pb-2">
-          <View className="flex flex-row ">
-            <Text className="text-black font-black text-[20px] w-[70%] ">
-              Experience
-            </Text>
-            <View className='flex flex-row justify-around'>
-            <View className="w-[15%] flex items-center">
-            <TouchableOpacity className='w-[100%]'
-                  hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
-                  onPress={() => {
-                    console.log('upload pressed');
-                    navigation.navigate('UserExperienceUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
-                  }}>
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/plus.png')}
-              />
-            </TouchableOpacity>
-            </View>
-            {userData?.UserExperience && userData?.UserExperience.length > 0 &&
-            <View className="w-[15%]  flex items-center">
-              <TouchableOpacity className='w-[100%]'
-                hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
-                onPress={() => {
-                  console.log('upload pressed');
-                  navigation.navigate('CommonUserUpdateScreen', {
-                    type: USERUPDATE.TYPE_EXPERIENCE,
-                    data: userData?.UserExperience
-                  }); // send params
-                }}>
-                <Image
-                  className="h-[25px] w-[25px]  "
-                  source={require('../assets/edit.png')}
-                />
-              </TouchableOpacity>
-            </View>}
-            </View>
-          </View>
-          {userData?.UserExperience && userData?.UserExperience.length > 0 &&
-          userData?.UserExperience.map(item => (
-            <ExperienceTab key={item.ID} data={item} />
-          ))}
-        </View>
+                    {/* Experience */}
+                    <View className="pt-5 pl-2 pb-2">
+                      <View className="flex flex-row ">
+                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                          Experience
+                        </Text>
+                        <View className='flex flex-row justify-around'>
+                        <View className="w-[15%] flex items-center">
+                        <TouchableOpacity className='w-[100%]'
+                              hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                              onPress={() => {
+                                console.log('upload pressed');
+                                navigation.navigate('UserExperienceUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
+                              }}>
+                          <Image
+                            className="h-[25px] w-[25px]  "
+                            source={require('../assets/plus.png')}
+                          />
+                        </TouchableOpacity>
+                        </View>
+                        {userData?.UserExperience && userData?.UserExperience.length > 0 &&
+                        <View className="w-[15%]  flex items-center">
+                          <TouchableOpacity className='w-[100%]'
+                            hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                            onPress={() => {
+                              console.log('upload pressed');
+                              navigation.navigate('CommonUserUpdateScreen', {
+                                type: USERUPDATE.TYPE_EXPERIENCE,
+                                data: userData?.UserExperience
+                              }); // send params
+                            }}>
+                            <Image
+                              className="h-[25px] w-[25px]  "
+                              source={require('../assets/edit.png')}
+                            />
+                          </TouchableOpacity>
+                        </View>}
+                        </View>
+                      </View>
+                      {userData?.UserExperience && userData?.UserExperience.length > 0 &&
+                      userData?.UserExperience.map((item: any) => (
+                        <ExperienceTab key={item.ID} data={item} />
+                      ))}
+                    </View>
 
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    {/* Line */}
+                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
 
-        {/* Education */}
-        <View className="pt-5 pl-2 pb-2">
-          <View className="flex flex-row ">
-            <Text className="text-black font-black text-[20px] w-[70%] ">
-              Education
-            </Text>
-            <View className='flex flex-row justify-around'>
-              <View className="w-[15%] flex items-center">
-                <TouchableOpacity className='w-[100%]'
-                  hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
-                  onPress={() => {
-                    console.log('upload pressed');
-                    navigation.navigate('UserEducationUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
-                  }}>
-                  <Image
-                    className="h-[25px] w-[25px]  "
-                    source={require('../assets/plus.png')}
-                  />
-                </TouchableOpacity>
-            </View>
-            {userData?.UserEducation && userData?.UserEducation.length > 0 &&
-              <View className="w-[15%]  flex items-center">
-                <TouchableOpacity
-                  hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
-                  onPress={() => {
-                    console.log('upload pressed');
-                    navigation.navigate('CommonUserUpdateScreen', {
-                      type: USERUPDATE.TYPE_EDUCATION,
-                      data: userData?.UserEducation
-                    }); // send params
-                  }}>
-                  <Image
-                    className="h-[25px] w-[25px]  "
-                    source={require('../assets/edit.png')}
-                  />
-                </TouchableOpacity>
-              </View>}
-            </View>
-          </View>
-          {userData?.UserEducation && userData?.UserEducation.length > 0 &&
-          userData?.UserEducation.map((item) => (
-            <EducationTab
-              key={item?.ID}
-              data={item}
+                    {/* Education */}
+                    <View className="pt-5 pl-2 pb-2">
+                      <View className="flex flex-row ">
+                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                          Education
+                        </Text>
+                        <View className='flex flex-row justify-around'>
+                          <View className="w-[15%] flex items-center">
+                            <TouchableOpacity className='w-[100%]'
+                              hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                              onPress={() => {
+                                console.log('upload pressed');
+                                navigation.navigate('UserEducationUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
+                              }}>
+                              <Image
+                                className="h-[25px] w-[25px]  "
+                                source={require('../assets/plus.png')}
+                              />
+                            </TouchableOpacity>
+                        </View>
+                        {userData?.UserEducation && userData?.UserEducation.length > 0 &&
+                          <View className="w-[15%]  flex items-center">
+                            <TouchableOpacity
+                              hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                              onPress={() => {
+                                console.log('upload pressed');
+                                navigation.navigate('CommonUserUpdateScreen', {
+                                  type: USERUPDATE.TYPE_EDUCATION,
+                                  data: userData?.UserEducation
+                                }); // send params
+                              }}>
+                              <Image
+                                className="h-[25px] w-[25px]  "
+                                source={require('../assets/edit.png')}
+                              />
+                            </TouchableOpacity>
+                          </View>}
+                        </View>
+                      </View>
+                      {userData?.UserEducation && userData?.UserEducation.length > 0 &&
+                      userData?.UserEducation.map((item: any) => (
+                        <EducationTab
+                          key={item?.ID}
+                          data={item}
+                        />
+                      ))}
+                    </View>
+
+                    {/* Line */}
+                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+
+                    {/* Resume */}
+                    <View className="pt-5 pl-2 mb-4">
+                      <View className="flex flex-row ">
+                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                          Resume
+                        </Text>
+                        <View className='flex flex-row justify-around'>
+                        <View className="w-[15%] flex items-center">
+                        <TouchableOpacity onPress={() => {
+                          console.log('upload pressed');
+                          void (async () => {
+                            await handleUploadResume();
+                          })();
+                        }}>
+                          <Image
+                            className="h-[25px] w-[25px]  "
+                            source={require('../assets/plus.png')}
+                            />
+                        </TouchableOpacity>
+                        </View>
+                        <View className="w-[15%] flex items-center">
+                        <TouchableOpacity onPress={() => {
+                          console.log('upload pressed');
+                          void (async () => {
+                            // handle delete resume
+                          })();
+                        }}>
+                          <Image
+                            className="h-[25px] w-[25px]  "
+                            source={require('../assets/delete.png')}
+                            />
+                        </TouchableOpacity>
+                        </View>
+                        </View>
+                      </View>
+                      <View className='flex mt-5 justify-center pr-2'>
+                        <TouchableOpacity onPress={() => {
+                          console.log('View resume pressed');
+                          void (async () => {
+                            await Linking.openURL(userResumeUrl);
+                          })();
+                        }}>
+                        <View className='flex  h-10 border-2 rounded-3xl border-blue-400 items-center'>
+                          <View className='w-[100%] h-[100%] flex justify-center items-center'>
+                            <Text className='text-blue-400'>View Resume</Text>
+                          </View>
+                        </View>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    {/* Line */}
+                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+
+                    {/* Posts */}
+                    <View className="pt-5 pl-2 mb-4 pr-2">
+                      <View className="flex flex-row ">
+                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                          Posts
+                        </Text>
+                      </View>
+                    </View>
+
+                  </ScrollView>}
+                 </>
+                );
+              }}
+              renderItem={({ item }) => {
+                return (
+                  <>
+                    {!isLoading && <View className='mx-1'>
+                      <PostContent user={userData} post={item} navigation={navigation} removePost={handleRemovePost}/>
+                    </View>}
+                  </>
+                );
+              }}
+              onEndReached={handlePostEndReached}
+              keyExtractor={item => item?.id.toString()}
+              onEndReachedThreshold={1}
+              ItemSeparatorComponent={() => {
+                return (
+                  <View className='mt-1'>
+
+                  </View>
+                );
+              }}
             />
-          ))}
-        </View>
-
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
-
-        {/* Resume */}
-        <View className="pt-5 pl-2 mb-4">
-          <View className="flex flex-row ">
-            <Text className="text-black font-black text-[20px] w-[70%] ">
-              Resume
-            </Text>
-            <View className='flex flex-row justify-around'>
-            <View className="w-[15%] flex items-center">
-            <TouchableOpacity onPress={() => {
-              console.log('upload pressed');
-              void (async () => {
-                await handleUploadResume();
-              })();
-            }}>
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/plus.png')}
-                />
-            </TouchableOpacity>
-            </View>
-            <View className="w-[15%] flex items-center">
-            <TouchableOpacity onPress={() => {
-              console.log('upload pressed');
-              void (async () => {
-                // handle delete resume
-              })();
-            }}>
-              <Image
-                className="h-[25px] w-[25px]  "
-                source={require('../assets/delete.png')}
-                />
-            </TouchableOpacity>
-            </View>
-            </View>
           </View>
-          <View className='flex mt-5 justify-center pr-2'>
-            <TouchableOpacity onPress={() => {
-              console.log('View resume pressed');
-              void (async () => {
-                await Linking.openURL(userResumeUrl);
-              })();
-            }}>
-            <View className='flex  h-10 border-2 rounded-3xl border-blue-400 items-center'>
-              <View className='w-[100%] h-[100%] flex justify-center items-center'>
-                <Text className='text-blue-400'>View Resume</Text>
-              </View>
-            </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Line */}
-        <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
-      </ScrollView>}
 
     </SafeAreaView>
   );
