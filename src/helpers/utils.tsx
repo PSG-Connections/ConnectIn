@@ -41,3 +41,9 @@ export async function clearAllEncryptedItems () {
 export async function sleepByMilliSec (ms: any) {
   return await new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export async function getGoogleDocsPDFURL (url: any) {
+  const encodedUrl = encodeURIComponent(url as string);
+  const googleDocsUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodedUrl}`;
+  return googleDocsUrl;
+}

@@ -155,7 +155,7 @@ export default function PostContent (props: any): JSX.Element {
                               <View key={index} className={`flex h-[23px] w-[23px] rounded-full absolute
                                 ${index === 0 ? 'left-[2px]' : index === 1 ? 'left-[14px]' : 'left-[28px]'}
                                 ${'z-.'.concat(index.toString())}`}>
-                                <Image className='h-full w-full rounded-full' resizeMode='contain' source={{ uri: item.profile_image_url }}/>
+                                {item.profile_image_url && item.profile_image_url !== '' && <Image className='h-full w-full rounded-full' resizeMode='contain' source={{ uri: item.profile_image_url }}/>}
                               </View>
                         ))}
                         </View>
@@ -163,8 +163,8 @@ export default function PostContent (props: any): JSX.Element {
                         {likes && likes.length > 0 && likes.map((item, index): any => (
                             <View key={index} className='flex mr-1'>
                               {index === likes.length - 1
-                                ? <Text className='text-black text-[10px]'>{item.first_name}{item.last_name}</Text>
-                                : <Text className='text-black text-[10px]'>{item.first_name}{item.last_name},</Text>}
+                                ? <Text className='text-black text-[10px]'>{item.first_name} {item.last_name}</Text>
+                                : <Text className='text-black text-[10px]'>{item.first_name} {item.last_name},</Text>}
                             </View>
                         ))}
                       </View>
@@ -231,13 +231,13 @@ export default function PostContent (props: any): JSX.Element {
                   <View className='w-[35%] mt-5 mb-4 border-solid border-t-4 border-slate-600 rounded-full'></View>
                 </View>
                 <View className='flex flex-col items-center'>
-                  <TouchableOpacity className='flex w-[80%] h-[30px] items-center justify-center border-solid border-2 border-red-500 rounded-full' onPress={() => {
+                  {props?.editable && <TouchableOpacity className='flex w-[80%] h-[30px] items-center justify-center border-solid border-2 border-red-500 rounded-full' onPress={() => {
                     void (async () => {
                       await handleDeletePost();
                     })();
                   }}>
                     <Text className='flex text-red-500'>Delete Post</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
                 </View>
               </View>
             </View>

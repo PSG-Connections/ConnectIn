@@ -7,7 +7,7 @@ import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { User } from '../models/user.model';
 import { UserContext } from '../contexts/user.context';
 import { AuthContext } from '../contexts/auth.context';
-import { GetLoggedInUserAPI, GetUserResumeUploadUrl, UploadAvatarAPI } from '../apis/user.api';
+import { DeleteLoggedInUserResume, GetLoggedInUserAPI, GetUserResumeUploadUrl, UploadAvatarAPI } from '../apis/user.api';
 import EducationTab from '../components/educationTab.component';
 import ExperienceTab from '../components/experienceTab.component';
 import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
@@ -20,6 +20,7 @@ import PostContent from '../components/postContent.component';
 import { Post } from '../models/post.model';
 import { GetUserPostsByEmail } from '../apis/post.api';
 import { UploadBlobToCloud } from '../apis';
+import { getGoogleDocsPDFURL } from '../helpers/utils';
 
 // import { useFocusEffect } from '@react-navigation/native';
 // import { axiosPut } from '../apis';
@@ -30,7 +31,6 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   const userContext = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
   const [userData, setUserData] = useState<User>();
-  const [userResumeUrl, setUserResumeUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [limit] = useState(10);
   const [offset, setOffset] = useState(0);
@@ -107,17 +107,17 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
       });
     }
   };
-  const getUserResume = async () => {
-    console.log('resume url--->', userData?.resume_url);
-    // handle errors
-    const encodedUrl = encodeURIComponent(userData?.resume_url as string);
-    const resumeUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodedUrl}`;
-    setUserResumeUrl(resumeUrl);
-  };
+  // const getUserResume = async () => {
+  //   console.log('resume url--->', userData?.resume_url);
+  //   // handle errors
+  //   const encodedUrl = encodeURIComponent(userData?.resume_url as string);
+  //   const resumeUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodedUrl}`;
+  //   setUserResumeUrl(resumeUrl);
+  // };
   const getLoggedInUser = async () => {
     console.log('in function --> getLoggedInUser');
     const accessToken = authContext.state.userToken;
-    await getUserResume();
+    // await getUserResume();
     const resp = await GetLoggedInUserAPI({ accessToken });
     // handle errors
     return resp;
@@ -189,7 +189,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
       } as unknown as string);
       const resumeUploadResponse = UploadBlobToCloud({ presignedUrl, Fileuri, contentType: 'application/pdf' });
       console.log(resumeUploadResponse);
-      await getUserResume();
+      // await getUserResume();
       // handle errors
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -208,6 +208,19 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
     const resp = await GetUserResumeUploadUrl(data);
     // handle error
     return resp?.url;
+  };
+  const handleDeleteResume = async () => {
+    const resp = await DeleteLoggedInUserResume({ accessToken: authContext.state.userToken });
+    console.log('delete resume resp-->', resp);
+    if (resp?.error) {
+      // handle error
+    } else {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      const updatedUser: User = { ...userData } as User;
+      updatedUser.resume_url = '';
+      userContext.SaveUserInContext(updatedUser);
+      setUserData(updatedUser);
+    }
   };
   return (
     <SafeAreaView className=" h-screen w-screen pb-12">
@@ -240,10 +253,12 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                     {/* Experience */}
                     <View className="pt-5 pl-2 pb-2">
                       <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
-                          Experience
-                        </Text>
-                        <View className='flex flex-row justify-around'>
+                        <View className='flex w-[70%]'>
+                          <Text className="text-black font-black text-[20px]">
+                            Experience
+                          </Text>
+                        </View>
+                        <View className='flex flex-row justify-around w-[30%]'>
                         <View className="w-[15%] flex items-center">
                         <TouchableOpacity className='w-[100%]'
                               hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
@@ -287,11 +302,13 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
 
                     {/* Education */}
                     <View className="pt-5 pl-2 pb-2">
-                      <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
-                          Education
-                        </Text>
-                        <View className='flex flex-row justify-around'>
+                      <View className="flex flex-row">
+                        <View className='flex w-[70%]'>
+                          <Text className="text-black font-black text-[20px]">
+                            Education
+                          </Text>
+                        </View>
+                        <View className='flex flex-row justify-around w-[30%]'>
                           <View className="w-[15%] flex items-center">
                             <TouchableOpacity className='w-[100%]'
                               hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
@@ -338,44 +355,56 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
 
                     {/* Resume */}
                     <View className="pt-5 pl-2 mb-4">
-                      <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
-                          Resume
-                        </Text>
-                        <View className='flex flex-row justify-around'>
-                        <View className="w-[15%] flex items-center">
-                        <TouchableOpacity onPress={() => {
-                          console.log('upload pressed');
-                          void (async () => {
-                            await handleUploadResume();
-                          })();
-                        }}>
-                          <Image
-                            className="h-[25px] w-[25px]  "
-                            source={require('../assets/plus.png')}
-                            />
-                        </TouchableOpacity>
+                      <View className="flex flex-row">
+                        <View className='flex w-[70%]'>
+                          <Text className="text-black font-black text-[20px]">
+                            Resume
+                          </Text>
                         </View>
-                        <View className="w-[15%] flex items-center">
-                        <TouchableOpacity onPress={() => {
-                          console.log('upload pressed');
-                          void (async () => {
-                            // handle delete resume
-                          })();
-                        }}>
-                          <Image
-                            className="h-[25px] w-[25px]  "
-                            source={require('../assets/delete.png')}
-                            />
-                        </TouchableOpacity>
+                        <View className='flex flex-row justify-around w-[30%]'>
+                          <View className="w-[15%] flex items-center">
+                            <TouchableOpacity
+                            hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                             onPress={() => {
+                               console.log('upload pressed');
+                               void (async () => {
+                                 await handleUploadResume();
+                               })();
+                             }}>
+                            {userData?.resume_url && userData.resume_url !== ''
+                              ? <Image
+                              className="h-[25px] w-[25px] "
+                              source={require('../assets/plus.png')}
+                              />
+                              : <Image
+                              className="h-[25px] w-[25px]  "
+                              source={require('../assets/edit.png')}
+                            />}
+                            </TouchableOpacity>
                         </View>
+                        {userData?.resume_url && userData.resume_url !== '' &&
+                          <View className="w-[15%] flex items-center">
+                            <TouchableOpacity className='w-[100%]'
+                            hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+                            onPress={() => {
+                              console.log('delete pressed');
+                              void (async () => {
+                                await handleDeleteResume();
+                              })();
+                            }}>
+                              <Image
+                                className="h-[25px] w-[25px]  "
+                                source={require('../assets/delete.png')}
+                                />
+                            </TouchableOpacity>
+                        </View>}
                         </View>
                       </View>
-                      <View className='flex mt-5 justify-center pr-2'>
+                      {userData?.resume_url && userData.resume_url !== '' && <View className='flex mt-5 justify-center pr-2'>
                         <TouchableOpacity onPress={() => {
                           console.log('View resume pressed');
                           void (async () => {
-                            await Linking.openURL(userResumeUrl);
+                            await Linking.openURL(await getGoogleDocsPDFURL(userData?.resume_url));
                           })();
                         }}>
                         <View className='flex  h-10 border-2 rounded-3xl border-blue-400 items-center'>
@@ -384,7 +413,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                           </View>
                         </View>
                         </TouchableOpacity>
-                      </View>
+                      </View>}
                     </View>
 
                     {/* Line */}
@@ -407,7 +436,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                 return (
                   <>
                     {!isLoading && <View className='mx-1'>
-                      <PostContent user={userData} post={item} navigation={navigation} removePost={handleRemovePost}/>
+                      <PostContent user={userData} post={item} navigation={navigation} removePost={handleRemovePost} editable={true}/>
                     </View>}
                   </>
                 );

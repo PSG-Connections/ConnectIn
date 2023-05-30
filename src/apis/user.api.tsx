@@ -136,6 +136,19 @@ export async function GetLoggedInUserResumeUrl (data: any) {
   return response;
 }
 
+export async function DeleteLoggedInUserResume ({ accessToken }: any) {
+  const axiosOptions = {
+    url: '/api/user/resume',
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}
+
 export async function UpdateUserDetails ({ accessToken, newUser }: any) {
   const axiosOptions = {
     url: '/api/user/update',

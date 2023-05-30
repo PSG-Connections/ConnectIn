@@ -269,7 +269,7 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
                 return (
                   <>
                     {!loading && <View className='mx-1'>
-                      <PostContent user={userData} post={item} navigation={navigation} removePost={null}/>
+                      <PostContent user={userData} post={item} navigation={navigation} removePost={null} editable={false}/>
                     </View>}
                   </>
                 );

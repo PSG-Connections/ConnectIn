@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-unused-styles */
 /* eslint-disable react-native/no-color-literals */
 // /* eslint-disable prettier/prettier */
-import React, { useContext, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, FlatList, RefreshControl } from 'react-native';
 // import { ScrollView } from 'react-native-gesture-handler';
 import { UserContext } from '../contexts/user.context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -11,6 +11,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Modal from 'react-native-modal';
 import { clearEncryptedItemByKey } from '../helpers/utils';
 import { AuthContext } from '../contexts/auth.context';
+import { Post } from '../models/post.model';
+import PostContent from '../components/postContent.component';
+import { GetUserFeed } from '../apis/feed.api';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function Feed ({ navigation, route }: NavProps): JSX.Element {
@@ -19,6 +22,11 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
   const userImageUri = userContext.userData?.profile_image_url;
   const [modalVisible, setModalVisible] = useState(false);
   const deviceHeight = Dimensions.get('window').height;
+  const [refreshing, setRefreshing] = React.useState(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [limit] = useState(10);
+  const [offset, setOffset] = useState(0);
+  const [posts, setPosts] = useState<Post[]>([]);
   const handleOnPressLogOut = async () => {
     try {
       console.log('logout clearing session');
@@ -31,6 +39,50 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
     }
     // authContext.dispatch({ type: 'SIGNED_OUT' });
   };
+
+  const handlePostEndReached = () => {
+    setOffset((prevState) => (prevState + limit));
+  };
+
+  useEffect(() => {
+    // fetch user posts
+    void (async () => {
+      await getUserFeed();
+    })();
+  }, [offset]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // setIsLoading(true);
+    setTimeout(() => {
+      setOffset(0);
+      // setIsLoading(false);
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const getUserFeed = async () => {
+    const accessToken = authContext.state.userToken;
+    const requestData = {
+      accessToken,
+      limit,
+      offset
+    };
+    console.log('calling get posts api--->', requestData);
+    const resp = await GetUserFeed(requestData);
+    console.log('get post api response--->', resp);
+    if (resp?.error) {
+      // handle errors
+    }
+    if (offset === 0) {
+      setPosts(resp?.Posts);
+    } else {
+      setPosts((prevState) => {
+        return [...prevState, ...resp?.Posts];
+      });
+    }
+  };
+
   return (
     <SafeAreaView className='h-screen'>
       <View className='h-[7%] bg-slate-600 fixed flex flex-row justify-between'>
@@ -48,6 +100,36 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
             <MaterialCommunityIcons name='message-flash' color='white' size={23}></MaterialCommunityIcons>
           </TouchableOpacity>
         </View>
+      </View>
+
+      {/* Timeline */}
+      <View className='h-[90%] flex'>
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          className='flex bg-slate-400 pt-1'
+          data={posts}
+          renderItem={({ item }) => {
+            return (
+              <>
+                {<View className='mx-1'>
+                  <PostContent user={userContext.userData} post={item} navigation={navigation} removePost={null} editable={false}/>
+                </View>}
+              </>
+            );
+          }}
+          onEndReached={handlePostEndReached}
+          keyExtractor={item => item?.id.toString()}
+          onEndReachedThreshold={0.5}
+          ItemSeparatorComponent={() => {
+            return (
+              <View className='mt-1'>
+
+              </View>
+            );
+          }}
+          />
       </View>
       <Modal
         animationIn={'slideInLeft'}

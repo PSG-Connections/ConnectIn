@@ -2,6 +2,7 @@ export const splanScreenMinTime: any = 1500; // 2 seconds
 
 export const profileServerURL: string = 'https://api.psglinkedin.tech/profile';
 export const postServerURL: string = 'https://api.psglinkedin.tech/post';
+export const newsFeedServerURL: string = 'https://api.psglinkedin.tech/news-feed';
 
 export enum OTP {
   TYPE_VERIFY_ACCOUNT = 'VERIFY_ACCOUNT',
