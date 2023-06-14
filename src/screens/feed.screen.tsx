@@ -111,7 +111,9 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
           <Text className='text-white text-xl'>Connect-In</Text>
         </View>
         <View className='flex flex-row justify-center mr-[4%] items-center'>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('MessageScreen');
+          }}>
             <MaterialCommunityIcons name='message-flash' color='white' size={23}></MaterialCommunityIcons>
           </TouchableOpacity>
         </View>
