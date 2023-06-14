@@ -9,11 +9,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modal';
-import { clearEncryptedItemByKey } from '../helpers/utils';
+import { clearEncryptedItemByKey, getEncryptedItemByKey } from '../helpers/utils';
 import { AuthContext } from '../contexts/auth.context';
 import { Post } from '../models/post.model';
 import PostContent from '../components/postContent.component';
 import { GetUserFeed } from '../apis/feed.api';
+import { DeleteFCMToken } from '../apis/auth.api';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function Feed ({ navigation, route }: NavProps): JSX.Element {
@@ -31,6 +32,20 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
     try {
       console.log('logout clearing session');
       // need to clear usercontext, authcontext
+      // clear fcm token in server
+      const fcmData = await getEncryptedItemByKey('user_fcm_token');
+      if (fcmData !== null) {
+        const reqData = {
+          ID: fcmData?.token.ID
+        };
+        const accessToken = authContext.state.userToken;
+        const deleteFcmResp = await DeleteFCMToken({ data: reqData, accessToken });
+        if (deleteFcmResp?.error) {
+          // handle errors
+        }
+      }
+      await clearEncryptedItemByKey('user_fcm_token');
+
       authContext.dispatch({ type: 'SIGNED_OUT' });
       userContext.ClearUserInContext();
       await clearEncryptedItemByKey('user_session');

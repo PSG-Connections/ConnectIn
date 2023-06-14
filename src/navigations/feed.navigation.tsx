@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import Feed from '../screens/feed.screen';
 import CommentsScreen from '../screens/comments.screen';
+
 const feedNavigation = createNativeStackNavigator();
 
 export default function FeedNavigation (): JSX.Element {

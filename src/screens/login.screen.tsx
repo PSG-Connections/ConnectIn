@@ -15,7 +15,7 @@ import React, { useContext, useState } from 'react';
 
 import { AuthContext } from '../contexts/auth.context';
 import { Formik } from 'formik';
-import { LoginAPI } from '../apis/auth.api';
+import { CreateFCMToken, LoginAPI } from '../apis/auth.api';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import { ToastMessageConstants } from '../constants/toast.message.constants';
@@ -23,6 +23,7 @@ import pallete from '../global/pallete';
 import { setEncryptedItemByKey } from '../helpers/utils';
 import { validEmail } from '../constants/regex';
 import { UserContext } from '../contexts/user.context';
+import { getFcmToken, storeFCMToken } from '../notifications/firebase.notification';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function Login ({ navigation }: NavProps): JSX.Element {
@@ -50,6 +51,7 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
       console.log(error);
     }
   };
+
   const handleForgotPassword = () => {
     navigation.navigate('ForgotPasswordEmail');
   };
@@ -73,6 +75,20 @@ export default function Login ({ navigation }: NavProps): JSX.Element {
       await storeSession(storeData);
       console.log('login response--->', response);
       userContext.SaveUserInContext(response?.user);
+
+      // firebase notifications token generate and send to server
+      const fcmToken = await getFcmToken();
+      const reqBody = {
+        token: fcmToken
+      };
+      const tokenSaveResp = await CreateFCMToken({ data: reqBody, accessToken });
+      console.log('CreateFCmToken -->', tokenSaveResp);
+
+      if (tokenSaveResp?.error) {
+        // handle errors
+      }
+      await storeFCMToken(tokenSaveResp);
+
       authContext.dispatch({ type: 'SIGNED_IN', accessToken });
       Toast.show({
         autoHide: true,

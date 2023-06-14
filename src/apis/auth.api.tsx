@@ -23,3 +23,45 @@ export async function LoginAPI (data: any) {
   const response = await HttpRequest(mergedConfig);
   return response;
 }
+
+export const CreateFCMToken = async ({ data, accessToken }: any) => {
+  const axiosOptions = {
+    url: '/api/firebase/token',
+    method: 'POST',
+    data,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+};
+
+export const UpdateFCMToken = async ({ data, accessToken }: any) => {
+  const axiosOptions = {
+    url: '/api/firebase/token',
+    method: 'PUT',
+    data,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+};
+
+export const DeleteFCMToken = async ({ data, accessToken }: any) => {
+  const axiosOptions = {
+    url: '/api/firebase/token',
+    method: 'DELETE',
+    data,
+    headers: {
+      Authorization: 'Bearer '.concat(accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+};

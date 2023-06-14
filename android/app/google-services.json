@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1001879851008",
+    "project_id": "connectin-aff82",
+    "storage_bucket": "connectin-aff82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001879851008:android:4f6f1ad2fdd196d406c8e5",
+        "android_client_info": {
+          "package_name": "com.connectin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001879851008-52oh593fenru16tk3guos58qnc322uq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGgMQ1PaEprbyi7Hhn0-TnNnM2HotZVj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001879851008-52oh593fenru16tk3guos58qnc322uq6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

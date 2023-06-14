@@ -5,6 +5,8 @@ import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeed
 import { VerifyOTPAPI } from '../apis/otp.api';
 import { OTP } from '../constants/common.constant';
 import { AuthContext } from '../contexts/auth.context';
+import { getFcmToken, storeFCMToken } from '../notifications/firebase.notification';
+import { CreateFCMToken } from '../apis/auth.api';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function Otp ({ navigation, route }: NavProps): JSX.Element {
@@ -15,6 +17,7 @@ export default function Otp ({ navigation, route }: NavProps): JSX.Element {
   useEffect(() => {
     setUserData(routeData?.userData);
   }, []);
+
   const handleOnSubmit = async (values: any) => {
     const reqBody = {
       email: userData?.email,
@@ -29,6 +32,17 @@ export default function Otp ({ navigation, route }: NavProps): JSX.Element {
       console.log('response', response);
       const accessToken = response?.token?.access_token;
       if (routeData?.type === OTP.TYPE_VERIFY_ACCOUNT) {
+        // firebase notifications token generate and send to server
+        const fcmToken = await getFcmToken();
+        const reqBody = {
+          token: fcmToken
+        };
+        const tokenSaveResp = await CreateFCMToken({ data: reqBody, accessToken });
+        if (tokenSaveResp?.error) {
+        // handle errors
+        }
+        await storeFCMToken(tokenSaveResp);
+
         authContext.dispatch({ type: 'SIGNED_IN', accessToken });
       } else if (routeData?.type === OTP.TYPE_FORGOT_PASSWORD) {
         navigation.navigate('PasswordReset', {

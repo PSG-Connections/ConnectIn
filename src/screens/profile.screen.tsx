@@ -59,8 +59,6 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
   }, []);
   useEffect(() => {
     console.log('profile use effect called-->');
-    // navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } });
-    // console.log('useEffect 1 called ----->>');
     const handleUserUpdated = (updatedUser: any) => {
       setUserData(updatedUser);
     };

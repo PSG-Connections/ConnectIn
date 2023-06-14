@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { Icon } from 'react-native-vector-icons/Icon';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -12,10 +12,35 @@ import PostNavigation from './post.navigation';
 import NotificationNavigation from './notifications.navigation';
 import ProfileNavigation from './profile.navigation';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { getFcmToken, storeFCMToken } from '../notifications/firebase.notification';
+import { CreateFCMToken } from '../apis/auth.api';
+import { AuthContext } from '../contexts/auth.context';
+import { getEncryptedItemByKey } from '../helpers/utils';
 
 const homeNavigation = createBottomTabNavigator();
 
-export default function HomeNavigation (): JSX.Element {
+export default function HomeNavigation ({ navigation }: any): JSX.Element {
+  const authContext = useContext(AuthContext);
+  useEffect(() => {
+    void (async () => {
+      const fcmData = await getEncryptedItemByKey('user_fcm_token');
+      if (fcmData === null) {
+        // firebase notifications token generate and send to server
+        const fcmToken = await getFcmToken();
+        const reqBody = {
+          token: fcmToken
+        };
+        const accessToken = authContext.state.userToken;
+        const tokenSaveResp = await CreateFCMToken({ data: reqBody, accessToken });
+        console.log('CreateFCmToken -->', tokenSaveResp);
+
+        if (tokenSaveResp?.error) {
+          // handle errors
+        }
+        await storeFCMToken(tokenSaveResp);
+      }
+    })();
+  }, []);
   return (
     <homeNavigation.Navigator screenOptions={({ route }) => ({
       headerShown: false,
