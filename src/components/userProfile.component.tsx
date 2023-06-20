@@ -140,19 +140,19 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
-              className=''
+              className='bg-[#404258]'
               data={posts}
               ListHeaderComponent={() => {
                 return (
                  <>
-                  {!loading && <ScrollView className="flex flex-col" refreshControl={
+                  {!loading && <ScrollView className="flex flex-col bg-[#03001C]" refreshControl={
                       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }>
                     {/* Cover & Profile Picture */}
                     <ProfileHeader data={userData} handleChoosePhoto={null} loggedInUser={false}/>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* follow */}
                     <View className='flex flex-row w-full my-3 pr-2'>
@@ -186,12 +186,12 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Experience */}
                     <View className="pt-5 pl-2 pb-2">
                       <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                        <Text className="text-white font-black text-[20px] w-[70%] ">
                           Experience
                         </Text>
                       </View>
@@ -205,12 +205,12 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Education */}
                     <View className="pt-5 pl-2 pb-2">
                       <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                        <Text className="text-white font-black text-[20px] w-[70%] ">
                           Education
                         </Text>
                       </View>
@@ -224,12 +224,12 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Resume */}
                     <View className="pt-5 pl-2 mb-4">
                       <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                        <Text className="text-white font-black text-[20px] w-[70%] ">
                           Resume
                         </Text>
                       </View>
@@ -250,12 +250,12 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Posts */}
                     <View className="pt-5 pl-2 mb-4 pr-2">
                       <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                        <Text className="text-white text-[20px] w-[70%] ">
                           Posts
                         </Text>
                       </View>
@@ -268,7 +268,7 @@ export default function UserProfile ({ navigation, route }: NavProps): JSX.Eleme
               renderItem={({ item }) => {
                 return (
                   <>
-                    {!loading && <View className='mx-1'>
+                    {!loading && <View className=''>
                       <PostContent user={userData} post={item} navigation={navigation} removePost={null} editable={false}/>
                     </View>}
                   </>

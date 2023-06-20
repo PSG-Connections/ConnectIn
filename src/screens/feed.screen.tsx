@@ -56,7 +56,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
   };
 
   const handlePostEndReached = () => {
-    setOffset((prevState) => (prevState + limit));
+    setOffset((prevState) => (prevState + limit + 1));
   };
 
   useEffect(() => {
@@ -99,8 +99,8 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
   };
 
   return (
-    <SafeAreaView className='h-screen'>
-      <View className='h-[7%] bg-slate-600 fixed flex flex-row justify-between'>
+    <SafeAreaView className='h-full'>
+      <View className='h-[7%] bg-[#03001C] fixed flex flex-row justify-between'>
         <TouchableOpacity className='flex justify-center ml-[4%]' onPress={() => { setModalVisible(true); }}>
         <Image
               className="h-[40px] w-[40px] rounded-full"
@@ -112,32 +112,32 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
         </View>
         <View className='flex flex-row justify-center mr-[4%] items-center'>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('MessageScreen');
+            navigation.navigate('ChatsListScreen');
           }}>
-            <MaterialCommunityIcons name='message-flash' color='white' size={23}></MaterialCommunityIcons>
+            <MaterialCommunityIcons name='chat-processing-outline' color='white' size={27}></MaterialCommunityIcons>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Timeline */}
-      <View className='h-[90%] flex'>
+      <View className='h-[93%] flex'>
         <FlatList
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          className='flex bg-slate-400 pt-1'
+          className='flex bg-[#404258]'
           data={posts}
           renderItem={({ item }) => {
             return (
               <>
-                {<View className='mx-1'>
+                {<View className=''>
                   <PostContent user={userContext.userData} post={item} navigation={navigation} removePost={null} editable={false}/>
                 </View>}
               </>
             );
           }}
           onEndReached={handlePostEndReached}
-          keyExtractor={item => item?.id.toString()}
+          keyExtractor={(item, index) => index.toString()}
           onEndReachedThreshold={0.5}
           ItemSeparatorComponent={() => {
             return (
@@ -148,6 +148,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
           }}
           />
       </View>
+      {/* <View className='bg-slate-400'></View> */}
       <Modal
         animationIn={'slideInLeft'}
         animationOut={'slideOutLeft'}
@@ -161,9 +162,9 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
         className='m-0'
       >
         <View className='h-full flex flex-row'>
-          <View className='w-[65%] bg-white flex h-screen'>
-            <View className='flex h-screen'>
-              <View>
+          <View className='w-[70%] flex bg-[#03001C]'>
+            <View className='flex h-full'>
+              <View className='flex h-[90%]'>
                 <View className='h-[130px] bg-slate-600 flex'>
 
                 </View>
@@ -174,7 +175,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
                   />
                 </View>
                 <View className='flex items-center -translate-y-10'>
-                  <Text className='text-black text-[19px]'>{userContext.userData.first_name} {userContext.userData.last_name}</Text>
+                  <Text className='text-white text-[19px]'>{userContext.userData.first_name} {userContext.userData.last_name}</Text>
                   <TouchableOpacity
                     onPress={() => {
                       setModalVisible(false);
@@ -182,26 +183,30 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
                     }}
                     className='mt-1'
                   >
-                    <Text className='text-slate-500'>View Profile</Text>
+                    <Text className='text-slate-400'>View Profile</Text>
                   </TouchableOpacity>
                 </View>
 
                 {/* line */}
-                <View className='border-solid border-t-2 border-slate-300  -translate-y-5'></View>
+                <View className='border-solid border-t-[1px] border-slate-300  -translate-y-5'></View>
 
                 {/* settings button */}
                 <View className='flex items-center mb-4'>
-                    <TouchableOpacity className='flex flex-row items-center w-[50%] '>
-                    <Ionicons name='settings' color='#0F172A' size={25}></Ionicons>
-                      <Text className='text-slate-700 text-lg ml-3'>Settings</Text>
+                    <TouchableOpacity className='flex flex-row items-center w-[50%]'
+                    onPress={() => {
+                      setModalVisible(false);
+                      navigation.navigate('SettingsScreen');
+                    }}>
+                    <Ionicons name='settings' color='white' size={25}></Ionicons>
+                      <Text className='text-white text-lg ml-3'>Settings</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* line */}
-                <View className='border-solid border-t-2 border-slate-300'></View>
+                <View className='border-solid border-t-[1px] border-slate-300'></View>
 
               </View>
-              <View className="flex h-[40px] absolute bottom-2 w-[95%] mx-2">
+              <View className="flex h-[10%] bottom-2 w-[80%] justify-center mx-auto">
                 <TouchableOpacity
                   onPress={() => {
                     void (async () => {
@@ -216,7 +221,7 @@ export default function Feed ({ navigation, route }: NavProps): JSX.Element {
               </View>
             </View>
           </View>
-          <TouchableOpacity className='w-[35%] flex' onPress={() => { setModalVisible(false); }} activeOpacity={1}>
+          <TouchableOpacity className='w-[30%] flex' onPress={() => { setModalVisible(false); }} activeOpacity={1}>
           </TouchableOpacity>
         </View>
       </Modal>

@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   RefreshControl,
-  SafeAreaView, ScrollView, View, Text, Image, Platform, Linking, TouchableOpacity, FlatList
+  SafeAreaView, ScrollView, View, Text, Platform, Linking, TouchableOpacity, FlatList
 } from 'react-native';
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { User } from '../models/user.model';
@@ -11,6 +11,8 @@ import { DeleteLoggedInUserResume, GetLoggedInUserAPI, GetUserResumeUploadUrl, U
 import EducationTab from '../components/educationTab.component';
 import ExperienceTab from '../components/experienceTab.component';
 import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ProfileHeader from '../components/profileHeader.component';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -227,12 +229,12 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
-              className=''
+              className='bg-[#404258]'
               data={posts}
               ListHeaderComponent={() => {
                 return (
                  <>
-                  {!isLoading && <ScrollView className="flex flex-col"
+                  {!isLoading && <ScrollView className="flex flex-col bg-[#03001C]"
                     refreshControl={
                       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
@@ -246,32 +248,29 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                     }}></Button> */}
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Experience */}
-                    <View className="pt-5 pl-2 pb-2">
+                    <View className="pt-5 pl-2 pb-2 bg-[#03001C]">
                       <View className="flex flex-row ">
                         <View className='flex w-[70%]'>
-                          <Text className="text-black font-black text-[20px]">
+                          <Text className="text-white font-black text-[20px]">
                             Experience
                           </Text>
                         </View>
                         <View className='flex flex-row justify-around w-[30%]'>
-                        <View className="w-[15%] flex items-center">
+                        <View className="flex items-center">
                         <TouchableOpacity className='w-[100%]'
                               hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                               onPress={() => {
                                 console.log('upload pressed');
                                 navigation.navigate('UserExperienceUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
                               }}>
-                          <Image
-                            className="h-[25px] w-[25px]  "
-                            source={require('../assets/plus.png')}
-                          />
+                          <Feather name='plus-circle' color='white' size={25}></Feather>
                         </TouchableOpacity>
                         </View>
                         {userData?.UserExperience && userData?.UserExperience.length > 0 &&
-                        <View className="w-[15%]  flex items-center">
+                        <View className="flex items-center">
                           <TouchableOpacity className='w-[100%]'
                             hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                             onPress={() => {
@@ -281,10 +280,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                                 data: userData?.UserExperience
                               }); // send params
                             }}>
-                            <Image
-                              className="h-[25px] w-[25px]  "
-                              source={require('../assets/edit.png')}
-                            />
+                            <MaterialIcons name='edit' color='white' size={27}></MaterialIcons>
                           </TouchableOpacity>
                         </View>}
                         </View>
@@ -296,32 +292,29 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Education */}
                     <View className="pt-5 pl-2 pb-2">
                       <View className="flex flex-row">
                         <View className='flex w-[70%]'>
-                          <Text className="text-black font-black text-[20px]">
+                          <Text className="text-white font-black text-[20px]">
                             Education
                           </Text>
                         </View>
                         <View className='flex flex-row justify-around w-[30%]'>
-                          <View className="w-[15%] flex items-center">
+                          <View className="flex items-center">
                             <TouchableOpacity className='w-[100%]'
                               hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                               onPress={() => {
                                 console.log('upload pressed');
                                 navigation.navigate('UserEducationUpdateScreen', { type: USERUPDATE.TYPE_CREATE, data: {} });
                               }}>
-                              <Image
-                                className="h-[25px] w-[25px]  "
-                                source={require('../assets/plus.png')}
-                              />
+                              <Feather name='plus-circle' color='white' size={25}></Feather>
                             </TouchableOpacity>
                         </View>
                         {userData?.UserEducation && userData?.UserEducation.length > 0 &&
-                          <View className="w-[15%]  flex items-center">
+                          <View className="flex items-center">
                             <TouchableOpacity
                               hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                               onPress={() => {
@@ -331,10 +324,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                                   data: userData?.UserEducation
                                 }); // send params
                               }}>
-                              <Image
-                                className="h-[25px] w-[25px]  "
-                                source={require('../assets/edit.png')}
-                              />
+                              <MaterialIcons name='edit' color='white' size={27}></MaterialIcons>
                             </TouchableOpacity>
                           </View>}
                         </View>
@@ -349,18 +339,18 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Resume */}
                     <View className="pt-5 pl-2 mb-4">
                       <View className="flex flex-row">
                         <View className='flex w-[70%]'>
-                          <Text className="text-black font-black text-[20px]">
+                          <Text className="text-white font-black text-[20px]">
                             Resume
                           </Text>
                         </View>
                         <View className='flex flex-row justify-around w-[30%]'>
-                          <View className="w-[15%] flex items-center">
+                          <View className="flex items-center">
                             <TouchableOpacity
                             hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                              onPress={() => {
@@ -370,18 +360,13 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                                })();
                              }}>
                             {userData?.resume_url && userData.resume_url !== ''
-                              ? <Image
-                              className="h-[25px] w-[25px] "
-                              source={require('../assets/plus.png')}
-                              />
-                              : <Image
-                              className="h-[25px] w-[25px]  "
-                              source={require('../assets/edit.png')}
-                            />}
+                              ? <Feather name='plus-circle' color='white' size={25}></Feather>
+                              : <MaterialIcons name='edit' color='white' size={27}></MaterialIcons>
+                            }
                             </TouchableOpacity>
                         </View>
                         {userData?.resume_url && userData.resume_url !== '' &&
-                          <View className="w-[15%] flex items-center">
+                          <View className="flex items-center">
                             <TouchableOpacity className='w-[100%]'
                             hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                             onPress={() => {
@@ -390,10 +375,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                                 await handleDeleteResume();
                               })();
                             }}>
-                              <Image
-                                className="h-[25px] w-[25px]  "
-                                source={require('../assets/delete.png')}
-                                />
+                            <MaterialIcons name='delete' color='white' size={27}></MaterialIcons>
                             </TouchableOpacity>
                         </View>}
                         </View>
@@ -415,12 +397,12 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
                     </View>
 
                     {/* Line */}
-                    <View className="bg-[#dbd9d9] h-[10px] w-full"></View>
+                    <View className="bg-[#dbd9d9] h-[1px] w-full"></View>
 
                     {/* Posts */}
                     <View className="pt-5 pl-2 mb-4 pr-2">
                       <View className="flex flex-row ">
-                        <Text className="text-black font-black text-[20px] w-[70%] ">
+                        <Text className="text-white font-black text-[20px] w-[70%] ">
                           Posts
                         </Text>
                       </View>
@@ -433,7 +415,7 @@ export default function ProfileScreen ({ navigation }: NavProps): JSX.Element {
               renderItem={({ item }) => {
                 return (
                   <>
-                    {!isLoading && <View className='mx-1'>
+                    {!isLoading && <View className=''>
                       <PostContent user={userData} post={item} navigation={navigation} removePost={handleRemovePost} editable={true}/>
                     </View>}
                   </>

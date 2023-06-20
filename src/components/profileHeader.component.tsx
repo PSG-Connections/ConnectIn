@@ -10,12 +10,12 @@ export default function ProfileHeader ({ data, handleChoosePhoto, loggedInUser, 
   return (
       <SafeAreaView className='w-full'>
         <View className=''>
-          <View className="">
-            <View className=' flex h-[150px] bg-slate-600'>
+          <View className="z-10">
+            <View className=' flex h-[150px] bg-slate-100'>
                 {/* <Image
                       resizeMode='stretch'
-                      className="h-full w-full rounded-full flex"
-                      source={(data?.profile_image_url) ? { uri: data?.profile_image_url } : require('../assets/profile.png')}
+                      className="h-full w-full flex"
+                      source={require('../assets/psg_background.jpg')}
                   /> */}
             </View>
             <View className="absolute top-[80px] w-[40%] h-[100%]">
@@ -28,20 +28,20 @@ export default function ProfileHeader ({ data, handleChoosePhoto, loggedInUser, 
                 </TouchableOpacity>
             </View>
           </View>
-          {loggedInUser && <View className='flex w-full items-end pr-3 mt-4'>
+          {loggedInUser && <View className='flex w-full items-end pr-3 pt-4 bg-[#03001C] z-0'>
               <TouchableOpacity disabled={!loggedInUser} onPress={() => {
                 void (async () => {
                   await handleUserEditButtonClick();
                 })();
               }}>
-                <MaterialIcons name='edit' color='black' size={27}></MaterialIcons>
+                <MaterialIcons name='edit' color='white' size={27}></MaterialIcons>
               </TouchableOpacity>
             </View>}
-          <View className={`flex flex-row w-full items-center ${!loggedInUser ? 'mt-14' : 'mt-4'}`}>
+          <View className={`flex flex-row w-full items-center bg-[#03001C] ${!loggedInUser ? 'pt-14' : 'pt-4'}`}>
             <View className="flex flex-col pb-2 w-[80%]">
               <View className="pl-2 pt-5">
-                <Text className="text-black font-black text-[20px]">{data?.first_name} {data?.last_name}</Text>
-                <Text className="text-black text-[16px] font-medium">
+                <Text className="text-white font-black text-[20px]">{data?.first_name} {data?.last_name}</Text>
+                <Text className="text-white text-[16px] font-medium">
                   {data?.headline}
                 </Text>
                   { data?.city !== '' && data?.country !== '' && <Text className="text-black text-[16px] font-medium">
@@ -64,7 +64,7 @@ export default function ProfileHeader ({ data, handleChoosePhoto, loggedInUser, 
             <View className='w-full flex flex-col'>
               <TouchableOpacity className='h-[70%] flex' onPress={() => { setModalVisible(false); }} activeOpacity={1}>
               </TouchableOpacity>
-              <View className='h-[30%] bg-white flex rounded-t-[30px]'>
+              <View className='h-[30%] bg-[#03001C] flex rounded-t-[30px]'>
                 <View className='flex h-screen flex-col items-center'>
                   <View className='w-[35%] mt-5 mb-4 border-solid border-t-4 border-slate-600 rounded-full'>
                   </View>

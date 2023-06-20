@@ -9,35 +9,31 @@ export function ConvertDateToPostContentDate (IsoDate: string) {
   const postDate = new Date(IsoDate);
   const presentDate = new Date();
 
+  const timeDiff = presentDate.getTime() - postDate.getTime();
+  const secondsDiff = Math.floor(timeDiff / 1000);
+
+  const secondsPerMinute = 60;
+  const minutesPerHour = 60;
+  const hoursPerDay = 24;
+  const daysPerMonth = 30;
   const monthsPerYear = 12;
 
-  const yearDiff = presentDate.getFullYear() - postDate.getFullYear();
-  const monthDiff = presentDate.getMonth() - postDate.getMonth();
-
-  const totalMonths = yearDiff * monthsPerYear + monthDiff;
-
-  if (totalMonths >= 12) {
-    const years = Math.floor(totalMonths / monthsPerYear);
-    return `${years.toString()}y`;
-  } else if (totalMonths >= 1) {
-    return `${totalMonths.toString()}m`;
+  if (secondsDiff < secondsPerMinute) {
+    return `${secondsDiff.toString()}s`;
+  } else if (secondsDiff < secondsPerMinute * minutesPerHour) {
+    const minutesDiff = Math.floor(secondsDiff / secondsPerMinute);
+    return `${minutesDiff.toString()}min`;
+  } else if (secondsDiff < secondsPerMinute * minutesPerHour * hoursPerDay) {
+    const hoursDiff = Math.floor(secondsDiff / (secondsPerMinute * minutesPerHour));
+    return `${hoursDiff.toString()}h`;
+  } else if (secondsDiff < secondsPerMinute * minutesPerHour * hoursPerDay * daysPerMonth) {
+    const daysDiff = Math.floor(secondsDiff / (secondsPerMinute * minutesPerHour * hoursPerDay));
+    return `${daysDiff.toString()}d`;
+  } else if (secondsDiff < secondsPerMinute * minutesPerHour * hoursPerDay * daysPerMonth * monthsPerYear) {
+    const monthsDiff = Math.floor(secondsDiff / (secondsPerMinute * minutesPerHour * hoursPerDay * daysPerMonth));
+    return `${monthsDiff.toString()} mon`;
   } else {
-    const dateDiff = presentDate.getDate() - postDate.getDate();
-    if (dateDiff === 0) {
-      const hoursDiff = presentDate.getHours() - postDate.getHours();
-      if (hoursDiff >= 1) {
-        return `${hoursDiff.toString()}h`;
-      } else {
-        const miniteDiff = presentDate.getMinutes() - postDate.getMinutes();
-        if (miniteDiff >= 1) {
-          return `${miniteDiff.toString()}min`;
-        } else {
-          const secondDiff = presentDate.getSeconds() - postDate.getSeconds();
-          return `${secondDiff.toString()}s`;
-        }
-      }
-    } else {
-      return `${dateDiff.toString()}d`;
-    }
+    const yearsDiff = Math.floor(secondsDiff / (secondsPerMinute * minutesPerHour * hoursPerDay * daysPerMonth * monthsPerYear));
+    return `${yearsDiff.toString()}y`;
   }
 }

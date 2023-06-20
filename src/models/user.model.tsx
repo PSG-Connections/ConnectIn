@@ -75,3 +75,11 @@ export interface UserSearchResult {
   headline: string
   following: boolean
 }
+
+export interface UserNotifications {
+  ID: number
+  content: string
+  UpdatedAt: string
+  CreatedAt: string
+  user_id: number
+}

@@ -1,10 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, View, ScrollView, Text, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView, View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { USERUPDATE } from '../constants/common.constant';
 import ExperienceTab from '../components/experienceTab.component';
 import EducationTab from '../components/educationTab.component';
 import { UserContext } from '../contexts/user.context';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type NavProps = NativeStackScreenProps<any>;
 export default function CommonUserUpdateScreen ({ navigation, route }: NavProps) {
@@ -22,7 +23,7 @@ export default function CommonUserUpdateScreen ({ navigation, route }: NavProps)
     }
   }, []);
   return (
-        <SafeAreaView className='bg-slate-500 h-full w-full'>
+        <SafeAreaView className='bg-[#03001C] h-full w-full'>
             <ScrollView className='mx-5 mt-7'>
                 <View className=''>
                     <Text className='text-white text-2xl'>{header}</Text>
@@ -32,21 +33,18 @@ export default function CommonUserUpdateScreen ({ navigation, route }: NavProps)
                         {
                             header === 'Education' &&
                             userUpdateData.map((item: any, index: any) => (
-                                <View key={index} className='flex flex-row mb-2'>
-                                    <View className='flex w-[80%] bg-white'>
+                                <View key={index} className='flex flex-row mb-2 bg-[#121213]'>
+                                    <View className='flex w-[80%]'>
                                         <EducationTab key={index} data={item}/>
                                     </View>
-                                    <View className='bg-white flex w-[20%] justify-center items-end'>
+                                    <View className='flex w-[20%] justify-center items-end'>
                                         <TouchableOpacity className='w-[100%] items-end mr-5'
                                             hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                                             onPress={() => {
                                               console.log('upload pressed');
                                               navigation.navigate('UserEducationUpdateScreen', { data: item, type: USERUPDATE.TYPE_UPDATE }); // send params
                                             }}>
-                                            <Image
-                                                className="h-[25px] w-[25px]"
-                                                source={require('../assets/edit.png')}
-                                            />
+                                            <MaterialIcons name='edit' color='white' size={27}></MaterialIcons>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -55,21 +53,18 @@ export default function CommonUserUpdateScreen ({ navigation, route }: NavProps)
                         {
                             header === 'Experience' &&
                             routeData?.data.map((item: any, index: any) => (
-                                <View key={index} className='flex flex-row mb-2'>
-                                    <View className='flex w-[80%] bg-white'>
+                                <View key={index} className='flex flex-row mb-2 bg-[#121213]'>
+                                    <View className='flex w-[80%]'>
                                         <ExperienceTab key={index} data={item}/>
                                     </View>
-                                    <View className='bg-white flex w-[20%] justify-center items-end'>
+                                    <View className='flex w-[20%] justify-center items-end'>
                                         <TouchableOpacity className='w-[100%] items-end mr-5'
                                             hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
                                             onPress={() => {
                                               console.log('upload pressed');
                                               navigation.navigate('UserExperienceUpdateScreen', { data: item, type: USERUPDATE.TYPE_UPDATE }); // send params
                                             }}>
-                                            <Image
-                                                className="h-[25px] w-[25px]"
-                                                source={require('../assets/edit.png')}
-                                            />
+                                            <MaterialIcons name='edit' color='white' size={27}></MaterialIcons>
                                         </TouchableOpacity>
                                     </View>
                                 </View>

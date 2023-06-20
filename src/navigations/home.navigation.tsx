@@ -22,6 +22,7 @@ const homeNavigation = createBottomTabNavigator();
 export default function HomeNavigation ({ navigation }: any): JSX.Element {
   const authContext = useContext(AuthContext);
   useEffect(() => {
+    // firebase notification get token if not exist
     void (async () => {
       const fcmData = await getEncryptedItemByKey('user_fcm_token');
       if (fcmData === null) {
@@ -41,14 +42,15 @@ export default function HomeNavigation ({ navigation }: any): JSX.Element {
       }
     })();
   }, []);
+
   return (
     <homeNavigation.Navigator screenOptions={({ route }) => ({
       headerShown: false,
       tabBarShowLabel: false,
-      tabBarStyle: { backgroundColor: '#475569' }
+      tabBarStyle: { backgroundColor: '#03001C' }
     }
     )}>
-      <homeNavigation.Screen name="Feed" component={FeedNavigation} options={{
+      <homeNavigation.Screen name="Feed" component={FeedNavigation} options={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => (
           <MaterialCommunityIcons name='home-circle' color='#CBD5E1' size={35} style={focused
             ? {
@@ -59,8 +61,19 @@ export default function HomeNavigation ({ navigation }: any): JSX.Element {
               }
             : {}}/>
         ),
-        headerShown: false
-      }}/>
+        headerShown: false,
+        tabBarStyle: ((route) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+          if (routeName === 'ChatsListScreen' || routeName === 'ChatScreen' ||
+          routeName === 'SettingsScreen' || routeName === 'CommentsScreen') {
+            return { display: 'none' };
+          } else {
+            return {
+              backgroundColor: '#03001C'
+            };
+          }
+        })(route)
+      })}/>
       <homeNavigation.Screen name="Search" component={SearchNavigation} options={{
         tabBarIcon: ({ focused, color, size }) => (
           <Ionicons name='search-circle' color={'#CBD5E1'} size={35} style={focused
@@ -122,7 +135,7 @@ export default function HomeNavigation ({ navigation }: any): JSX.Element {
             return { display: 'none' };
           } else {
             return {
-              backgroundColor: '#475569'
+              backgroundColor: '#03001C'
             };
           }
         })(route)

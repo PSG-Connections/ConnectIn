@@ -47,7 +47,7 @@ export default function UserUpdateScreen ({ navigation, route }: NavProps): JSX.
   return (
     <>
     {
-      <SafeAreaView className='bg-slate-800 h-full w-full '>
+      <SafeAreaView className='bg-[#03001C] h-full w-full '>
         <Formik
           initialValues={initialUserDetails}
           onSubmit={handleUpdateUser}>
@@ -145,7 +145,7 @@ export default function UserUpdateScreen ({ navigation, route }: NavProps): JSX.
                 </View>
                 </View>
               </ScrollView>
-              <View className='bg-slate-800 w-[100%] h-[50px] absolute flex bottom-0 border-t-2 border-slate-500 mb-2'>
+              <View className='bg-[#03001C] w-[100%] h-[50px] absolute flex bottom-0 border-t-2 border-slate-500 mb-2'>
                 <View className='flex w-[95%] justify-center mx-auto my-[2px] pt-1'>
                   <TouchableOpacity
                     className='h-[100%] rounded-full w-[100%] bg-blue-500 flex justify-center items-center'
@@ -172,7 +172,7 @@ const searchStyle = StyleSheet.create({
     borderColor: '#64AFCB',
     borderStyle: 'solid',
     marginTop: 10,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#03001C',
     position: 'relative',
     zIndex: 2
   }

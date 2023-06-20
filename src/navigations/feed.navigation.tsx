@@ -2,7 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import Feed from '../screens/feed.screen';
 import CommentsScreen from '../screens/comments.screen';
-import MessageScreen from '../screens/message.screen';
+import ChatsListScreen from '../screens/chatsList.screen';
+import SettingsScreen from '../screens/settings.screen';
+import ChatScreen from '../screens/chat.screen';
 
 const feedNavigation = createNativeStackNavigator();
 
@@ -17,12 +19,19 @@ export default function FeedNavigation (): JSX.Element {
         presentation: 'modal'
       }}
       />
-      <feedNavigation.Screen name="MessageScreen" component={MessageScreen}
+      <feedNavigation.Screen name="ChatsListScreen" component={ChatsListScreen}
       options={{
         animationTypeForReplace: 'push',
         animation: 'slide_from_right'
       }}
       />
+      <feedNavigation.Screen name="ChatScreen" component={ChatScreen}
+      options={{
+        animationTypeForReplace: 'push',
+        animation: 'slide_from_right'
+      }}
+      />
+      <feedNavigation.Screen name="SettingsScreen" component={SettingsScreen}/>
     </feedNavigation.Navigator>
   );
 }

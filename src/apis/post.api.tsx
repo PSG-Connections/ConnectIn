@@ -168,3 +168,21 @@ export async function AddPost (data: any) {
   const response = await HttpRequest(mergedConfig);
   return response;
 }
+
+export async function GetUserNotifications (data: any) {
+  const params = {
+    offset: data?.offset,
+    limit: data?.limit
+  };
+  const axiosOptions = {
+    url: '/api/notification',
+    method: 'GET',
+    params,
+    headers: {
+      Authorization: 'Bearer '.concat(data.accessToken)
+    }
+  };
+  const mergedConfig = Object.assign(defaultConfig, axiosOptions);
+  const response = await HttpRequest(mergedConfig);
+  return response;
+}

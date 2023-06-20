@@ -21,13 +21,13 @@ export default function ExperienceTab (props: any) {
             source={require('../assets/experience-replace.jpg')}
           />
           <View className="flex flex-col pl-2 text-black">
-            <Text className="text-black text-[13px] font-black ">
+            <Text className="text-white text-[13px] font-black ">
               {props?.data?.title}
             </Text>
-            <Text className="text-black text-[11px] font-semibold">
+            <Text className="text-white text-[11px] font-semibold">
               {props?.data?.company}  .  {employemenType}
             </Text>
-            <Text className="text-black text-[10px] font-medium">
+            <Text className="text-white text-[10px] font-medium">
               {workDate}
             </Text>
             {/* <Text className="text-black text-[10px] font-medium">

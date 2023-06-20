@@ -69,10 +69,10 @@ export default function CommentsScreen ({ navigation, route }: NavProps): JSX.El
   };
 
   return (
-        <SafeAreaView className='h-full w-full'>
+        <SafeAreaView className='h-full w-full bg-[#03001C]'>
 
             {/* headers */}
-            <View className='flex justify-center bg-slate-500 h-[8%] '>
+            <View className='flex justify-center h-[8%] '>
                 <View className='flex flex-row h-[40px] fixed items-center'>
                     <View className='flex w-[15%] items-center'>
                         {/* CLose Button */}
@@ -83,13 +83,13 @@ export default function CommentsScreen ({ navigation, route }: NavProps): JSX.El
                         </View>
                     </View>
                     <View className='flex ml-3 w-[85%]'>
-                        <Text className='text-[23px]'>Comments</Text>
+                        <Text className='text-[23px] text-white'>Comments</Text>
                     </View>
                 </View>
             </View>
 
             {/* body */}
-            <View className='flex h-[84%] bg-slate-500 pt-3'>
+            <View className='flex h-[84%] pt-3'>
                 <FlatList
                  data={comments}
                  renderItem={({ item, index }) => {
@@ -113,7 +113,7 @@ export default function CommentsScreen ({ navigation, route }: NavProps): JSX.El
             </View>
 
             {/* footer */}
-            <View className='flex flex-row fixed bottom-0 bg-slate-500 items-center px-2 h-[8%] mb-[2px]'>
+            <View className='flex flex-row fixed bottom-0 items-center px-2 h-[8%] mb-[2px]'>
                 <View className='flex w-[15%] items-center'>
                     <Image
                         className="h-[40px] w-[40px] rounded-full flex"

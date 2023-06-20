@@ -79,9 +79,9 @@ export default function PostContent (props: any): JSX.Element {
   }, [liked]);
 
   return (
-       <SafeAreaView className='flex flex-col bg-slate-700 rounded-[4px]'>
+       <SafeAreaView className='flex flex-col bg-[#03001C]'>
             {/* headers */}
-            <View className='flex h-[70px] bg-blue-300 justify-center pl-2 rounded-t-[4px]'>
+            <View className='flex h-[70px] justify-center pl-2 rounded-t-[4px]'>
                 <View className='flex flex-row h-[80%]'>
                     <View className='flex w-[13%] h-[90%]'>
                         <Image className='h-full w-full rounded-full' source={props?.user?.profile_image_url ? { uri: props?.user?.profile_image_url } : require('../assets/profile.png')}/>
@@ -112,7 +112,7 @@ export default function PostContent (props: any): JSX.Element {
                 {/* Captions */}
                 <View className='flex mb-2'>
                     {/* add elipsis */}
-                    <Text>{postBody.caption}</Text>
+                    <Text className='text-white'>{postBody.caption}</Text>
                 </View>
                 {/* images */}
                 <View className='flex h-[200px] w-[98%]'>
@@ -147,9 +147,9 @@ export default function PostContent (props: any): JSX.Element {
                         <Text className='text-white'>{imageIndexSelected + 1}/{postBody.count}</Text>
                     </View>}
                 </View>
-                <View className='flex w-full pr-2'>
+                <View className='flex w-full pr-2 my-[3px]'>
                     {likes &&
-                    <View className='flex flex-row bg-white'>
+                    <View className='flex flex-row'>
                       <View className={`h-[25px] ${likes.length === 3 ? 'w-[15%]' : likes.length === 2 ? 'w-[11%]' : 'w-[8%]'} my-[1px] flex flex-row items-center`}>
                         {likes && likes.length > 0 && likes.map((item, index): any => (
                               <View key={index} className={`flex h-[23px] w-[23px] rounded-full absolute
@@ -163,8 +163,8 @@ export default function PostContent (props: any): JSX.Element {
                         {likes && likes.length > 0 && likes.map((item, index): any => (
                             <View key={index} className='flex mr-1'>
                               {index === likes.length - 1
-                                ? <Text className='text-black text-[10px]'>{item.first_name} {item.last_name}</Text>
-                                : <Text className='text-black text-[10px]'>{item.first_name} {item.last_name},</Text>}
+                                ? <Text className='text-white text-[10px]'>{item.first_name} {item.last_name}</Text>
+                                : <Text className='text-white text-[10px]'>{item.first_name} {item.last_name},</Text>}
                             </View>
                         ))}
                       </View>

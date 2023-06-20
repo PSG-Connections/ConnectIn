@@ -176,7 +176,7 @@ export default function PostScreen ({ navigation }: any): JSX.Element {
     });
   };
   return (
-    <SafeAreaView className='bg-slate-600 h-full w-full'>
+    <SafeAreaView className='bg-[#03001C] h-full w-full'>
       <View className='mx-4 mt-3 h-full'>
         {/* Fixed Header */}
         <View className='flex flex-row justify-between h-[40px] fixed items-center'>
@@ -189,7 +189,7 @@ export default function PostScreen ({ navigation }: any): JSX.Element {
                   navigation.goBack();
                 }}></Ionicons>
             </View>
-            <View className={`mr-[10px] ${enablePostButton ? 'bg-blue-500' : 'bg-slate-400'} rounded-full w-[60px] h-[35px] flex justify-center items-center`}>
+            <View className={`mr-[10px] ${enablePostButton ? 'bg-blue-500' : 'bg-[#323131]'} rounded-full w-[60px] h-[35px] flex justify-center items-center`}>
               <TouchableOpacity
               className='flex justify-center'
               disabled={!enablePostButton}
@@ -228,7 +228,7 @@ export default function PostScreen ({ navigation }: any): JSX.Element {
               onChangeText={(value) => {
                 // console.log('value entered', value);
                 setPostTextContent(value);
-                if (value.length >= 4) {
+                if (value.length >= 1) {
                   setEnablePostButton(true);
                 } else {
                   if (mediaCount === 0) {

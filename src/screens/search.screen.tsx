@@ -72,7 +72,7 @@ export default function Search ({ navigation, route }: NavProps): JSX.Element {
   };
 
   return (
-    <SafeAreaView className=" h-screen w-screen bg-slate-600">
+    <SafeAreaView className=" h-screen w-screen bg-[#03001C]">
       <View className="flex items-center mt-3 fixed">
               <View className="w-[100%] flex flex-row items-center justify-center">
                 <TextInput
